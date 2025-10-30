@@ -12,23 +12,23 @@ export default function Home({ imageData, error, image, title, preview, imageBas
         alignItems: "center", 
         minHeight: "100vh", 
         backgroundColor: "#0a0a0a", 
-        fontFamily: "'Inter', 'Helvetica Neue', sans-serif", 
+        fontFamily: "'Montserrat', 'Helvetica Neue', sans-serif", 
         padding: "20px",
         gap: "20px"
       }}>
         <Head>
           <title>{title ? decodeURIComponent(title) : "Image Preview"}</title>
           <link 
-            href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" 
+            href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&display=swap" 
             rel="stylesheet" 
           />
         </Head>
         
-        {/* Hidden Canvas for rendering combined image */}
+        {/* Hidden Canvas for rendering combined image at high resolution */}
         <canvas 
           id="downloadCanvas"
-          width="1080" 
-          height="1350"
+          width="2160" 
+          height="2700"
           style={{ display: "none" }}
         />
         
@@ -70,18 +70,20 @@ export default function Home({ imageData, error, image, title, preview, imageBas
             }}>
               <h1 style={{
                 fontSize: "clamp(2rem, 5vw, 4rem)",
-                fontWeight: "800",
-                lineHeight: "1.2",
+                fontWeight: "900",
+                lineHeight: "1.1",
                 margin: "0",
-                textShadow: "2px 4px 12px rgba(0, 0, 0, 0.8)",
-                background: "linear-gradient(135deg, #ffffff 0%, #f0f0f0 50%, #ffffff 100%)",
+                textShadow: "3px 6px 15px rgba(0, 0, 0, 0.9)",
+                background: "linear-gradient(135deg, #ffffff 0%, #f8f8f8 50%, #ffffff 100%)",
                 WebkitBackgroundClip: "text",
                 WebkitTextFillColor: "transparent",
                 backgroundClip: "text",
-                letterSpacing: "-0.02em",
+                letterSpacing: "-0.03em",
                 wordWrap: "break-word",
                 overflowWrap: "break-word",
-                hyphens: "auto"
+                hyphens: "auto",
+                fontFamily: "'Montserrat', sans-serif",
+                textTransform: "uppercase"
               }}>
                 {decodeURIComponent(title)}
               </h1>
@@ -168,9 +170,12 @@ export default function Home({ imageData, error, image, title, preview, imageBas
               const img = document.getElementById('previewImage');
               const title = "${title ? decodeURIComponent(title).replace(/"/g, '\\"') : ''}";
               
-              // Set canvas size
-              canvas.width = 1080;
-              canvas.height = 1350;
+              // Set canvas size at 2x resolution for better quality
+              canvas.width = 2160;
+              canvas.height = 2700;
+              
+              // Scale context to maintain coordinate system
+              ctx.scale(2, 2);
               
               // Function to wrap text into multiple lines
               function wrapText(ctx, text, maxWidth) {
@@ -192,30 +197,40 @@ export default function Home({ imageData, error, image, title, preview, imageBas
                 return lines;
               }
               
+
+              
               // When image loads, draw everything
               const drawImage = () => {
+                // Enable high-quality image rendering
+                ctx.imageSmoothingEnabled = true;
+                ctx.imageSmoothingQuality = 'high';
+                
                 // Calculate image dimensions for proper cropping/zooming
                 const imgAspect = img.naturalWidth / img.naturalHeight;
                 const canvasAspect = 1080 / 1350;
                 
-                let drawWidth, drawHeight, drawX, drawY;
+                let sourceX, sourceY, sourceWidth, sourceHeight;
                 
                 if (imgAspect > canvasAspect) {
-                  // Image is wider - fit to height and crop sides
-                  drawHeight = 1350;
-                  drawWidth = drawHeight * imgAspect;
-                  drawX = (1080 - drawWidth) / 2;
-                  drawY = 0;
+                  // Image is wider - crop from center horizontally
+                  sourceHeight = img.naturalHeight;
+                  sourceWidth = sourceHeight * canvasAspect;
+                  sourceX = (img.naturalWidth - sourceWidth) / 2;
+                  sourceY = 0;
                 } else {
-                  // Image is taller - fit to width and crop top/bottom
-                  drawWidth = 1080;
-                  drawHeight = drawWidth / imgAspect;
-                  drawX = 0;
-                  drawY = (1350 - drawHeight) / 2;
+                  // Image is taller - crop from center vertically
+                  sourceWidth = img.naturalWidth;
+                  sourceHeight = sourceWidth / canvasAspect;
+                  sourceX = 0;
+                  sourceY = (img.naturalHeight - sourceHeight) / 2;
                 }
                 
-                // Draw the background image with proper aspect ratio (zoomed/cropped)
-                ctx.drawImage(img, drawX, drawY, drawWidth, drawHeight);
+                // Draw using source cropping instead of destination scaling for better quality
+                ctx.drawImage(
+                  img, 
+                  sourceX, sourceY, sourceWidth, sourceHeight,  // Source rectangle
+                  0, 0, 1080, 1350                              // Destination rectangle
+                );
                 
                 if (title) {
                 // Create improved gradient overlay (starts higher and more black at bottom)
@@ -232,18 +247,16 @@ export default function Home({ imageData, error, image, title, preview, imageBas
                   ctx.textAlign = 'center';
                   ctx.textBaseline = 'middle';
                   
-                  // Start with a good font size
-                  let fontSize = 120;
-                  ctx.font = 'bold ' + fontSize + 'px Inter, Arial, sans-serif';
-                  
-                  const maxWidth = 1000;
+                // Start with a good font size
+                let fontSize = 120;
+                ctx.font = '900 ' + fontSize + 'px Montserrat, Arial, sans-serif';                  const maxWidth = 1000;
                   const maxLines = 3;
                   let lines = wrapText(ctx, title, maxWidth);
                   
                   // Reduce font size if we have too many lines or lines are still too wide
                   while ((lines.length > maxLines || lines.some(line => ctx.measureText(line).width > maxWidth)) && fontSize > 50) {
                     fontSize -= 8;
-                    ctx.font = 'bold ' + fontSize + 'px Inter, Arial, sans-serif';
+                    ctx.font = '900 ' + fontSize + 'px Montserrat, Arial, sans-serif';
                     lines = wrapText(ctx, title, maxWidth);
                   }
                   
@@ -257,8 +270,8 @@ export default function Home({ imageData, error, image, title, preview, imageBas
                     const y = startY + (index * lineHeight);
                     
                     // Draw text shadow
-                    ctx.fillStyle = 'rgba(0, 0, 0, 0.8)';
-                    ctx.fillText(line, 542, y + 2); // Slightly offset for shadow
+                    ctx.fillStyle = 'rgba(0, 0, 0, 0.9)';
+                    ctx.fillText(line, 542, y + 3);
                     
                     // Draw main text
                     ctx.fillStyle = 'white';
@@ -266,11 +279,13 @@ export default function Home({ imageData, error, image, title, preview, imageBas
                   });
                 }
                 
-                // Download the canvas as image
+                // Download the canvas as image with high quality
                 const link = document.createElement('a');
                 const fileName = title ? title.replace(/[^a-z0-9]/gi, '_') : 'banner';
                 link.download = fileName + '.' + format;
-                link.href = canvas.toDataURL('image/' + format, 0.95);
+                // Use maximum quality for JPEG (1.0) and PNG (lossless)
+                const quality = format === 'jpeg' ? 1.0 : undefined;
+                link.href = canvas.toDataURL('image/' + format, quality);
                 link.click();
               };
               
