@@ -1,43 +1,83 @@
-# 🎨 Overlay Banner Generator
+# 📡 Image Data API
 
-A stunning, production-ready Next.js application that creates beautiful 1080×1350 banners with customizable image backgrounds and gradient text overlays.
+A powerful Next.js application that fetches images and returns detailed metadata including headers, binary data, and file information in JSON format.
 
-## ✨ Enhanced Features
+## ✨ API Features
 
-- **Fixed Canvas Size**: 1080×1350 pixels - perfect for social media
-- **Smart Text Overlay**: Title appears directly on the image with gradient backdrop
-- **Custom Typography**: Inter font family with responsive scaling
-- **Gradient Effects**: Beautiful gradient overlays and text effects
-- **Auto-fit Text**: Automatically adjusts font size based on content length
-- **Responsive Design**: Works beautifully on all device sizes
-- **Modern UI**: Dark theme with smooth animations and shadows
-- **Error Handling**: Graceful fallbacks for broken images
+- **Image Fetching**: Downloads images from any URL
+- **Header Analysis**: Returns complete HTTP headers
+- **Binary Data**: Provides image data in multiple formats
+- **File Detection**: Automatically detects content type and file extension
+- **Error Handling**: Comprehensive error responses
+- **CORS Enabled**: Cross-origin requests supported
+- **Multiple Endpoints**: Both web interface and pure API access
 
-## 🔧 URL Parameters
+## 🔧 API Parameters
 
-- `image` → Background image URL
-- `title` → Overlay text (URL encoded for special characters)
+- `image` → Image URL to fetch and analyze (required)
+- `title` → Optional title/description text
 
-## 🚀 Usage
+## 🚀 API Endpoints
 
-Visit the deployed application with URL parameters:
+### 1. Web Interface (with HTML response)
 ```
-https://your-domain.com/?image=IMAGE_URL&title=BANNER_TEXT
-```
-
-### Examples:
-```
-# Simple banner
-?image=https://images.unsplash.com/photo-1506905925346-21bda4d32df4&title=Adventure%20Awaits
-
-# Marketing banner  
-?image=https://images.unsplash.com/photo-1557804506-669a67965ba0&title=Black%20Friday%20Sale
-
-# Event banner
-?image=https://images.unsplash.com/photo-1492684223066-81342ee5ff30&title=Conference%202024
+https://your-domain.com/?image=IMAGE_URL&title=TITLE
 ```
 
-## Development
+### 2. Pure JSON API 
+```
+https://your-domain.com/api/image?image=IMAGE_URL&title=TITLE
+```
+
+## 📝 Usage Examples
+
+### Basic Image Fetch:
+```
+GET /?image=https://images.unsplash.com/photo-1506905925346-21bda4d32df4&title=Adventure%20Awaits
+```
+
+### API Response Example:
+```json
+[
+  {
+    "statusCode": 200,
+    "headers": [
+      {
+        "name": "content-type",
+        "value": "image/jpeg"
+      },
+      {
+        "name": "content-length", 
+        "value": "370962"
+      }
+    ],
+    "cookieHeaders": [],
+    "data": "IMTBuffer(370962, binary, ffd8ffe000104a46...): ffd8ffe000104a46...",
+    "fileSize": 370962,
+    "fileName": "file.jpeg",
+    "metadata": {
+      "contentType": "image/jpeg",
+      "originalUrl": "https://images.unsplash.com/photo-1506905925346-21bda4d32df4",
+      "title": "Adventure Awaits",
+      "base64Data": "/* full base64 encoded image data */"
+    }
+  }
+]
+```
+
+## 🔧 Response Format
+
+The API returns detailed information about fetched images:
+
+- **statusCode**: HTTP status code from the image request
+- **headers**: Complete HTTP headers as name/value pairs  
+- **cookieHeaders**: Any cookies from the response
+- **data**: Binary image data representation with hex preview
+- **fileSize**: Size of the image file in bytes
+- **fileName**: Generated filename with proper extension
+- **metadata**: Additional information including full base64 data
+
+## 🛠 Development
 
 1. Install dependencies:
 ```bash
@@ -49,11 +89,16 @@ npm install
 npm run dev
 ```
 
-3. Build for production:
+3. Test the API:
+```bash
+curl "http://localhost:3000/api/image?image=https://images.unsplash.com/photo-1506905925346-21bda4d32df4"
+```
+
+4. Build for production:
 ```bash
 npm run build
 ```
 
-## Deployment
+## 🚀 Deployment
 
-This project is optimized for Vercel deployment. Simply connect your GitHub repository to Vercel for automatic deployments.
+This API is optimized for Vercel deployment with serverless functions. Simply connect your GitHub repository to Vercel for automatic deployments with global CDN support.
