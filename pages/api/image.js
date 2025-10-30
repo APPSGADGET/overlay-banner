@@ -1,3 +1,5 @@
+import { fetchImageWithBuiltins } from "../../lib/fetchUtils";
+
 // API route for pure JSON response
 export default async function handler(req, res) {
   const { image, title } = req.query;
@@ -12,15 +14,23 @@ export default async function handler(req, res) {
   }
 
   try {
-    // Fetch the image
-    const response = await fetch(image, {
-      headers: {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
-      }
-    });
+    // Validate URL
+    let imageUrl;
+    try {
+      imageUrl = new URL(image);
+    } catch (urlError) {
+      throw new Error(`Invalid image URL: ${image}`);
+    }
+
+    console.log(`API: Fetching image from: ${imageUrl.href}`);
+
+    // Use Node.js built-in modules for more reliable fetching
+    const response = await fetchImageWithBuiltins(imageUrl.href);
+
+    console.log(`API: Response status: ${response.status}`);
 
     if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
+      throw new Error(`HTTP ${response.status}: ${response.statusText}`);
     }
 
     // Get response headers
@@ -79,13 +89,33 @@ export default async function handler(req, res) {
     return res.status(200).json(responseData);
 
   } catch (error) {
-    console.error('Error fetching image:', error);
+    console.error('API Error fetching image:', error);
     
-    return res.status(500).json({
+    // Provide detailed error information
+    let errorDetails = {
       error: "Failed to fetch image",
       message: error.message,
       statusCode: 500,
-      timestamp: new Date().toISOString()
-    });
+      timestamp: new Date().toISOString(),
+      originalUrl: image,
+      errorCode: error.code,
+      errorName: error.name
+    };
+    
+    if (error.code === 'ENOTFOUND') {
+      errorDetails.suggestion = 'Invalid domain name or DNS resolution failed';
+    } else if (error.code === 'ECONNREFUSED') {
+      errorDetails.suggestion = 'Connection refused by the server';
+    } else if (error.code === 'ETIMEDOUT') {
+      errorDetails.suggestion = 'Request timed out - server took too long to respond';
+    } else if (error.cause?.code === 'UNABLE_TO_GET_ISSUER_CERT_LOCALLY') {
+      errorDetails.suggestion = 'SSL certificate issue - automatically trying HTTP fallback';
+    } else if (error.cause?.code === 'CERT_HAS_EXPIRED') {
+      errorDetails.suggestion = 'SSL certificate expired - trying alternative connection';
+    } else if (error.cause?.code === 'SELF_SIGNED_CERT_IN_CHAIN') {
+      errorDetails.suggestion = 'Self-signed SSL certificate detected - handling automatically';
+    }
+    
+    return res.status(500).json(errorDetails);
   }
 }
