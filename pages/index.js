@@ -480,6 +480,73 @@ export default function Home({ imageData, error, image, title, preview, imageBas
           <div style={codeStyle}>
             /api/direct-image?image=https://images.unsplash.com/photo-1506905925346-21bda4d32df4&title=Adventure%20Awaits&website=TravelCorp.com&format=png
           </div>
+          
+          <h4 style={{ color: "#FF9800", marginBottom: "10px", marginTop: "20px" }}>🎨 Design Variants:</h4>
+          <div style={codeStyle}>
+            /api/direct-image?image=https://picsum.photos/800/600&title=BREAKING%20NEWS&website=CNN.com&design=design1
+          </div>
+          <div style={codeStyle}>
+            /api/direct-image?image=https://picsum.photos/800/600&title=TECH%20UPDATE&website=TechCrunch.com&design=design2
+          </div>
+          <div style={codeStyle}>
+            /api/direct-image?image=https://picsum.photos/800/600&title=VIRAL%20NOW&website=BuzzFeed.com&design=design3
+          </div>
+          <div style={codeStyle}>
+            /api/direct-image?image=https://picsum.photos/800/600&title=HOT%20TOPIC&website=YouTube.com&design=design4
+          </div>
+          <div style={codeStyle}>
+            /api/direct-image?image=https://picsum.photos/800/600&title=OFFICIAL%20STATEMENT&website=Reuters.com&design=design5
+          </div>
+          <div style={codeStyle}>
+            /api/direct-image?image=https://picsum.photos/800/600&title=CYBER%20ALERT&website=Wired.com&design=design6
+          </div>
+          
+          <h4 style={{ color: "#9C27B0", marginBottom: "10px", marginTop: "20px" }}>🆕 New Design Variants (7-12):</h4>
+          <div style={codeStyle}>
+            /api/direct-image?image=https://picsum.photos/800/600&title=FLASH%20UPDATE&website=NewsAlert.com&design=design7
+          </div>
+          <div style={codeStyle}>
+            /api/direct-image?image=https://picsum.photos/800/600&title=FUTURE%20TECH&website=CyberNews.com&design=design8
+          </div>
+          <div style={codeStyle}>
+            /api/direct-image?image=https://picsum.photos/800/600&title=ENERGY%20PULSE&website=PowerNews.com&design=design9
+          </div>
+          <div style={codeStyle}>
+            /api/direct-image?image=https://picsum.photos/800/600&title=AMBER%20WARNING&website=AlertSystem.com&design=design10
+          </div>
+          <div style={codeStyle}>
+            /api/direct-image?image=https://picsum.photos/800/600&title=CORPORATE%20NEWS&website=BusinessDaily.com&design=design11
+          </div>
+          <div style={codeStyle}>
+            /api/direct-image?image=https://picsum.photos/800/600&title=METALLIC%20SIGNAL&website=ModernNews.com&design=design12
+          </div>
+
+          <h3 style={{ color: "#FF5722", marginBottom: "15px", marginTop: "25px" }}>🎨 All Design Variants (1-12):</h3>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: "10px", fontSize: "12px", lineHeight: "1.6", opacity: "0.9" }}>
+            <div>
+              <strong>Original Designs (1-6):</strong>
+              <ul style={{ marginTop: "5px", paddingLeft: "15px" }}>
+                <li><strong>default</strong> - Modern gradient with clean typography</li>
+                <li><strong>design1</strong> - 🚨 Classic Red Alert (Breaking news with red gradient)</li>
+                <li><strong>design2</strong> - ⚡ Blue Pulse (Modern tech-news with electric blue)</li>
+                <li><strong>design3</strong> - 🟡 Yellow Flash (Social-media viral with yellow stripe)</li>
+                <li><strong>design4</strong> - 🟥 Gradient Burst (Red-orange YouTube-style)</li>
+                <li><strong>design5</strong> - 📰 White Noise (Professional newsroom look)</li>
+                <li><strong>design6</strong> - 🧨 Cyber Alert (Futuristic neon & glitch effects)</li>
+              </ul>
+            </div>
+            <div>
+              <strong>New Designs (7-12):</strong>
+              <ul style={{ marginTop: "5px", paddingLeft: "15px" }}>
+                <li><strong>design7</strong> - 🔥 Red Flash Impact (Urgent viral alert with Impact font)</li>
+                <li><strong>design8</strong> - ⚡ Electric Cyan Pop (Fresh futuristic tech vibe)</li>
+                <li><strong>design9</strong> - 🖤 Black + Red Pulse (Energetic attention-grabber)</li>
+                <li><strong>design10</strong> - 🟠 Amber Alert (Authoritative newsroom alert)</li>
+                <li><strong>design11</strong> - 🔵 Blue Ribbon News (Reliable corporate news)</li>
+                <li><strong>design12</strong> - 🔴 Metallic Red Signal (Modern polished update)</li>
+              </ul>
+            </div>
+          </div>
 
           <h3 style={{ color: "#2196F3", marginBottom: "15px", marginTop: "25px" }}>Parameters:</h3>
           <ul style={{ lineHeight: "2", opacity: "0.9" }}>
@@ -487,6 +554,7 @@ export default function Home({ imageData, error, image, title, preview, imageBas
             <li><code>title</code> - Text overlay for preview mode</li>
             <li><code>website</code> - Website name for branding (optional)</li>
             <li><code>preview</code> - Set to 'true' to see image output instead of JSON</li>
+            <li><code>design</code> - Design variant: 'default', 'design1-12' (various styles: red alert, blue pulse, yellow flash, red burst, professional, cyber, red impact, cyan pop, black+red, amber alert, blue ribbon, metallic red)</li>
             <li><code>format</code> - Output format: 'jpeg' or 'png' (for direct image API)</li>
             <li><code>w</code> - Width in pixels (for direct image API, default: 1080)</li>
             <li><code>h</code> - Height in pixels (for direct image API, default: 1350)</li>
