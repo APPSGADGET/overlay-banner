@@ -1,7 +1,7 @@
 import Head from "next/head";
 import { fetchImageWithBuiltins } from "../lib/fetchUtils";
 
-export default function Home({ imageData, error, image, title, preview, imageBase64 }) {
+export default function Home({ imageData, error, image, title, preview, imageBase64, website }) {
   // If preview mode is enabled, show the actual image with overlay
   if (preview && imageBase64) {
     return (
@@ -64,7 +64,7 @@ export default function Home({ imageData, error, image, title, preview, imageBas
               left: "0",
               right: "0",
               background: "linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, 0.1) 20%, rgba(0, 0, 0, 0.4) 40%, rgba(0, 0, 0, 0.7) 60%, rgba(0, 0, 0, 0.9) 80%, rgba(0, 0, 0, 0.98) 100%)",
-              padding: "100px 40px 80px 40px",
+              padding: "100px 40px 20px 40px",
               color: "white",
               textAlign: "center"
             }}>
@@ -72,7 +72,7 @@ export default function Home({ imageData, error, image, title, preview, imageBas
                 fontSize: "clamp(2rem, 5vw, 4rem)",
                 fontWeight: "900",
                 lineHeight: "1.1",
-                margin: "0",
+                margin: "0 0 20px 0",
                 textShadow: "3px 6px 15px rgba(0, 0, 0, 0.9)",
                 background: "linear-gradient(135deg, #ffffff 0%, #f8f8f8 50%, #ffffff 100%)",
                 WebkitBackgroundClip: "text",
@@ -87,6 +87,22 @@ export default function Home({ imageData, error, image, title, preview, imageBas
               }}>
                 {decodeURIComponent(title)}
               </h1>
+              
+              {website && (
+                <div style={{
+                  fontSize: "clamp(0.8rem, 2vw, 1.2rem)",
+                  fontWeight: "700",
+                  fontFamily: "'Inter', sans-serif",
+                  textTransform: "uppercase",
+                  letterSpacing: "0.15em",
+                  color: "#FFD700",
+                  textShadow: "2px 2px 8px rgba(0, 0, 0, 0.8)",
+                  marginBottom: "30px",
+                  opacity: "0.95"
+                }}>
+                  {decodeURIComponent(website)}
+                </div>
+              )}
             </div>
           )}
           
@@ -168,9 +184,11 @@ export default function Home({ imageData, error, image, title, preview, imageBas
               const canvas = document.getElementById('downloadCanvas');
               const ctx = canvas.getContext('2d');
               const img = document.getElementById('previewImage');
-              const title = "${title ? decodeURIComponent(title).replace(/"/g, '\\"') : ''}";
-              
-              // Set canvas size at 2x resolution for better quality
+            const title = "${title ? decodeURIComponent(title).replace(/"/g, '\\"') : ''}";
+            const website = "${website ? decodeURIComponent(website).replace(/"/g, '\\"') : ''}";
+            
+            console.log('Canvas rendering - Title:', title);
+            console.log('Canvas rendering - Website:', website);              // Set canvas size at 2x resolution for better quality
               canvas.width = 2160;
               canvas.height = 2700;
               
@@ -204,6 +222,9 @@ export default function Home({ imageData, error, image, title, preview, imageBas
                 // Enable high-quality image rendering
                 ctx.imageSmoothingEnabled = true;
                 ctx.imageSmoothingQuality = 'high';
+                
+                // Ensure fonts are loaded before rendering
+                document.fonts.ready.then(() => {
                 
                 // Calculate image dimensions for proper cropping/zooming
                 const imgAspect = img.naturalWidth / img.naturalHeight;
@@ -277,6 +298,24 @@ export default function Home({ imageData, error, image, title, preview, imageBas
                     ctx.fillStyle = 'white';
                     ctx.fillText(line, 540, y);
                   });
+                  
+                  // Draw website name if provided
+                  if (website) {
+                    const websiteFontSize = Math.min(36, fontSize * 0.3);
+                    ctx.font = '700 ' + websiteFontSize + 'px Inter, Arial, sans-serif';
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'middle';
+                    
+                    const websiteY = startY + (lines.length * lineHeight) + 40;
+                    
+                    // Draw website shadow
+                    ctx.fillStyle = 'rgba(0, 0, 0, 0.8)';
+                    ctx.fillText(website.toUpperCase(), 542, websiteY + 2);
+                    
+                    // Draw website text in gold
+                    ctx.fillStyle = '#FFD700';
+                    ctx.fillText(website.toUpperCase(), 540, websiteY);
+                  }
                 }
                 
                 // Download the canvas as image with high quality
@@ -287,6 +326,7 @@ export default function Home({ imageData, error, image, title, preview, imageBas
                 const quality = format === 'jpeg' ? 1.0 : undefined;
                 link.href = canvas.toDataURL('image/' + format, quality);
                 link.click();
+              });
               };
               
               if (img.complete) {
@@ -412,7 +452,7 @@ export default function Home({ imageData, error, image, title, preview, imageBas
             ?image=IMAGE_URL&title=TITLE_TEXT
           </div>
           <div style={codeStyle}>
-            ?image=IMAGE_URL&title=TITLE_TEXT&preview=true  {/* Preview Mode */}
+            ?image=IMAGE_URL&title=TITLE_TEXT&website=WEBSITE_NAME&preview=true  {/* Preview Mode */}
           </div>
 
           <h3 style={{ color: "#2196F3", marginBottom: "15px", marginTop: "25px" }}>Examples:</h3>
@@ -427,17 +467,29 @@ export default function Home({ imageData, error, image, title, preview, imageBas
           
           <h4 style={{ color: "#FF9800", marginBottom: "10px", marginTop: "20px" }}>🖼️ Preview Mode:</h4>
           <div style={codeStyle}>
-            ?image=https://picsum.photos/800/600&title=Test%20Image&preview=true
+            ?image=https://picsum.photos/800/600&title=Test%20Image&website=MyBrand.com&preview=true
           </div>
           <div style={codeStyle}>
-            ?image=https://images.unsplash.com/photo-1506905925346-21bda4d32df4&title=Adventure%20Awaits&preview=true
+            ?image=https://images.unsplash.com/photo-1506905925346-21bda4d32df4&title=Adventure%20Awaits&website=TravelCorp.com&preview=true
+          </div>
+
+          <h4 style={{ color: "#E91E63", marginBottom: "10px", marginTop: "20px" }}>🔗 Direct Image URL (like wsrv.nl):</h4>
+          <div style={codeStyle}>
+            /api/direct-image?image=https://picsum.photos/800/600&title=Breaking%20News&website=YourSite.com
+          </div>
+          <div style={codeStyle}>
+            /api/direct-image?image=https://images.unsplash.com/photo-1506905925346-21bda4d32df4&title=Adventure%20Awaits&website=TravelCorp.com&format=png
           </div>
 
           <h3 style={{ color: "#2196F3", marginBottom: "15px", marginTop: "25px" }}>Parameters:</h3>
           <ul style={{ lineHeight: "2", opacity: "0.9" }}>
             <li><code>image</code> - Image URL to fetch (required)</li>
             <li><code>title</code> - Text overlay for preview mode</li>
+            <li><code>website</code> - Website name for branding (optional)</li>
             <li><code>preview</code> - Set to 'true' to see image output instead of JSON</li>
+            <li><code>format</code> - Output format: 'jpeg' or 'png' (for direct image API)</li>
+            <li><code>w</code> - Width in pixels (for direct image API, default: 1080)</li>
+            <li><code>h</code> - Height in pixels (for direct image API, default: 1350)</li>
           </ul>
 
           <h3 style={{ color: "#2196F3", marginBottom: "15px", marginTop: "25px" }}>Response includes:</h3>
@@ -448,6 +500,7 @@ export default function Home({ imageData, error, image, title, preview, imageBas
             <li>✅ File Size Information</li>
             <li>✅ Content Type Detection</li>
             <li>✅ 🖼️ Preview Mode Available</li>
+            <li>✅ 🔗 Direct Image URLs (like wsrv.nl)</li>
           </ul>
 
           <div style={{ 
@@ -469,11 +522,11 @@ export default function Home({ imageData, error, image, title, preview, imageBas
 
 // Server-side rendering to fetch image data
 export async function getServerSideProps(context) {
-  const { image = "", title = "", preview = "" } = context.query;
+  const { image = "", title = "", preview = "", website = "" } = context.query;
   
   // If no image parameter, show the API documentation
   if (!image) {
-    return { props: { image: "", title: "", preview: "" } };
+    return { props: { image: "", title: "", preview: "", website: "" } };
   }
 
   try {
@@ -551,7 +604,8 @@ export async function getServerSideProps(context) {
         image,
         title,
         preview: shouldPreview,
-        imageBase64
+        imageBase64,
+        website
       }
     };
 
@@ -585,7 +639,8 @@ export async function getServerSideProps(context) {
         error: errorMessage,
         image,
         title,
-        preview: preview === 'true' || preview === '1'
+        preview: preview === 'true' || preview === '1',
+        website
       }
     };
   }

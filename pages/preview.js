@@ -1,6 +1,6 @@
 import Head from "next/head";
 
-export default function PreviewPage({ imageBase64, title, error, image }) {
+export default function PreviewPage({ imageBase64, title, error, image, website }) {
   if (error) {
     return (
       <div style={{ 
@@ -122,7 +122,7 @@ export default function PreviewPage({ imageBase64, title, error, image }) {
             left: "0",
             right: "0",
             background: "linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, 0.1) 20%, rgba(0, 0, 0, 0.4) 40%, rgba(0, 0, 0, 0.7) 60%, rgba(0, 0, 0, 0.9) 80%, rgba(0, 0, 0, 0.98) 100%)",
-            padding: "100px 40px 80px 40px",
+            padding: "100px 40px 20px 40px",
             color: "white",
             textAlign: "center"
           }}>
@@ -130,7 +130,7 @@ export default function PreviewPage({ imageBase64, title, error, image }) {
               fontSize: "clamp(2rem, 5vw, 4rem)",
               fontWeight: "900",
               lineHeight: "1.1",
-              margin: "0",
+              margin: "0 0 20px 0",
               textShadow: "3px 6px 15px rgba(0, 0, 0, 0.9)",
               background: "linear-gradient(135deg, #ffffff 0%, #f8f8f8 50%, #ffffff 100%)",
               WebkitBackgroundClip: "text",
@@ -145,6 +145,22 @@ export default function PreviewPage({ imageBase64, title, error, image }) {
             }}>
               {decodeURIComponent(title)}
             </h1>
+            
+            {website && (
+              <div style={{
+                fontSize: "clamp(0.8rem, 2vw, 1.2rem)",
+                fontWeight: "700",
+                fontFamily: "'Inter', sans-serif",
+                textTransform: "uppercase",
+                letterSpacing: "0.15em",
+                color: "#FFD700",
+                textShadow: "2px 2px 8px rgba(0, 0, 0, 0.8)",
+                marginBottom: "30px",
+                opacity: "0.95"
+              }}>
+                {decodeURIComponent(website)}
+              </div>
+            )}
           </div>
         )}
         
@@ -219,7 +235,7 @@ export default function PreviewPage({ imageBase64, title, error, image }) {
         justifyContent: "center"
       }}>
         <a 
-          href={`/?image=${encodeURIComponent(image)}${title ? `&title=${encodeURIComponent(title)}` : ''}`}
+          href={`/?image=${encodeURIComponent(image)}${title ? `&title=${encodeURIComponent(title)}` : ''}${website ? `&website=${encodeURIComponent(website)}` : ''}`}
           style={{
             backgroundColor: "#2196F3",
             color: "white",
@@ -233,7 +249,7 @@ export default function PreviewPage({ imageBase64, title, error, image }) {
           📊 View JSON Data
         </a>
         <a 
-          href={`/api/image?image=${encodeURIComponent(image)}${title ? `&title=${encodeURIComponent(title)}` : ''}`}
+          href={`/api/image?image=${encodeURIComponent(image)}${title ? `&title=${encodeURIComponent(title)}` : ''}${website ? `&website=${encodeURIComponent(website)}` : ''}`}
           style={{
             backgroundColor: "#4CAF50",
             color: "white",
@@ -269,6 +285,10 @@ export default function PreviewPage({ imageBase64, title, error, image }) {
             const ctx = canvas.getContext('2d');
             const img = document.getElementById('previewImage');
             const title = "${title ? decodeURIComponent(title).replace(/"/g, '\\"') : ''}";
+            const website = "${website ? decodeURIComponent(website).replace(/"/g, '\\"') : ''}";
+            
+            console.log('Canvas rendering - Title:', title);
+            console.log('Canvas rendering - Website:', website);
             
             // Set canvas size at 2x resolution for better quality
             canvas.width = 2160;
@@ -302,6 +322,9 @@ export default function PreviewPage({ imageBase64, title, error, image }) {
               // Enable high-quality image rendering
               ctx.imageSmoothingEnabled = true;
               ctx.imageSmoothingQuality = 'high';
+              
+              // Ensure fonts are loaded before rendering
+              document.fonts.ready.then(() => {
               
               // Calculate image dimensions for proper cropping/zooming
               const imgAspect = img.naturalWidth / img.naturalHeight;
@@ -377,6 +400,24 @@ export default function PreviewPage({ imageBase64, title, error, image }) {
                   ctx.fillStyle = 'white';
                   ctx.fillText(line, 540, y);
                 });
+                
+                // Draw website name if provided
+                if (website) {
+                  const websiteFontSize = Math.min(36, fontSize * 0.3);
+                  ctx.font = '700 ' + websiteFontSize + 'px Inter, Arial, sans-serif';
+                  ctx.textAlign = 'center';
+                  ctx.textBaseline = 'middle';
+                  
+                  const websiteY = startY + (lines.length * lineHeight) + 40;
+                  
+                  // Draw website shadow
+                  ctx.fillStyle = 'rgba(0, 0, 0, 0.8)';
+                  ctx.fillText(website.toUpperCase(), 542, websiteY + 2);
+                  
+                  // Draw website text in gold
+                  ctx.fillStyle = '#FFD700';
+                  ctx.fillText(website.toUpperCase(), 540, websiteY);
+                }
               }
               
               // Download the canvas as image with high quality
@@ -387,6 +428,7 @@ export default function PreviewPage({ imageBase64, title, error, image }) {
               const quality = format === 'jpeg' ? 1.0 : undefined;
               link.href = canvas.toDataURL('image/' + format, quality);
               link.click();
+            });
             };
             
             if (img.complete) {
@@ -403,10 +445,10 @@ export default function PreviewPage({ imageBase64, title, error, image }) {
 
 // Fetch image data for preview
 export async function getServerSideProps(context) {
-  const { image = "", title = "" } = context.query;
+  const { image = "", title = "", website = "" } = context.query;
   
   if (!image) {
-    return { props: { image: "", title: "" } };
+    return { props: { image: "", title: "", website: "" } };
   }
 
   try {
@@ -422,7 +464,8 @@ export async function getServerSideProps(context) {
       props: {
         imageBase64: base64Data,
         image,
-        title: title || ""
+        title: title || "",
+        website: website || ""
       }
     };
 
@@ -432,7 +475,8 @@ export async function getServerSideProps(context) {
       props: {
         error: `Failed to load preview: ${error.message}`,
         image,
-        title: title || ""
+        title: title || "",
+        website: website || ""
       }
     };
   }
