@@ -579,8 +579,9 @@ function generateDesignVariant(design, params) {
           <defs>
             <linearGradient id="gradient" x1="0%" y1="0%" x2="0%" y2="100%">
               <stop offset="0%" style="stop-color:rgb(0,0,0);stop-opacity:0"/>
-              <stop offset="30%" style="stop-color:rgb(0,0,0);stop-opacity:0.2"/>
-              <stop offset="60%" style="stop-color:rgb(0,0,0);stop-opacity:0.6"/>
+              <stop offset="15%" style="stop-color:rgb(0,0,0);stop-opacity:0.1"/>
+              <stop offset="40%" style="stop-color:rgb(0,0,0);stop-opacity:0.4"/>
+              <stop offset="70%" style="stop-color:rgb(0,0,0);stop-opacity:0.7"/>
               <stop offset="100%" style="stop-color:rgb(0,0,0);stop-opacity:0.95"/>
             </linearGradient>
           </defs>
@@ -690,8 +691,8 @@ export default async function handler(req, res) {
         const decodedTitle = decodeURIComponent(title);
         const decodedWebsite = website ? decodeURIComponent(website) : '';
         
-        // Create a gradient overlay using Sharp - reduce to show more background
-        const gradientHeight = Math.floor(height * 0.35); // Reduced from 0.5 to 0.35 (35% of image)
+        // Create a gradient overlay using Sharp - make it higher for default design
+        const gradientHeight = Math.floor(height * (design === 'default' ? 0.55 : 0.35)); // Higher coverage for default design
         
         // Function to wrap text into multiple lines with better width calculation
         const wrapText = (text, maxWidth, fontSize) => {
@@ -724,9 +725,9 @@ export default async function handler(req, res) {
           return lines.slice(0, 2); // Max 2 lines for better readability
         };
         
-        // Calculate font size and text area with proper padding
+        // Calculate font size and text area with more padding
         const fontSize = Math.min(width * 0.045, 44); // Slightly smaller
-        const textPadding = width * 0.08; // 8% padding on each side
+        const textPadding = width * 0.15; // Increased from 8% to 15% padding on each side
         const maxTextWidth = width - (textPadding * 2);
         const titleLines = wrapText(decodedTitle.toUpperCase(), maxTextWidth, fontSize);
         const lineHeight = fontSize * 1.15;
