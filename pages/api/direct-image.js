@@ -667,6 +667,13 @@ function generateDesignVariant(design, params) {
         </svg>
       `;
 
+    case 'blank': // Blank/Transparent - No overlay whatsoever
+      return `
+        <svg width="${width}" height="${height}" xmlns="http://www.w3.org/2000/svg">
+          <!-- Completely transparent - no background, no text, no overlay -->
+        </svg>
+      `;
+
     default: // Default design (original)
       return `
         <svg width="${width}" height="${height}" xmlns="http://www.w3.org/2000/svg">
@@ -923,7 +930,7 @@ export default async function handler(req, res) {
   if (!image) {
     res.status(400).json({ 
       error: "Missing required parameter 'image'",
-      usage: "?image=IMAGE_URL&title=TITLE&website=WEBSITE&format=jpeg|png&w=WIDTH&h=HEIGHT&design=default|design1-12&textCase=upper|lower|title|sentence|original",
+      usage: "?image=IMAGE_URL&title=TITLE&website=WEBSITE&format=jpeg|png&w=WIDTH&h=HEIGHT&design=default|design1-12|blank&textCase=upper|lower|title|sentence|original",
       example: "/api/direct-image?image=https://picsum.photos/800/600&title=Your%20Title&website=YourSite.com&design=design7&textCase=title",
       designs: {
         "default": "Modern gradient with clean typography",
@@ -938,7 +945,8 @@ export default async function handler(req, res) {
         "design9": "🖤 Black + Red Pulse - Energetic attention-grabber",
         "design10": "🟠 Amber Alert - Authoritative newsroom alert",
         "design11": "🔵 Blue Ribbon News - Reliable corporate news",
-        "design12": "🔴 Metallic Red Signal - Modern polished breaking update"
+        "design12": "🔴 Metallic Red Signal - Modern polished breaking update",
+        "blank": "⬜ Completely Transparent - No overlay, background, or text whatsoever"
       },
       textCaseOptions: {
         "upper/uppercase": "ALL CAPS - Traditional urgent news style (default)",

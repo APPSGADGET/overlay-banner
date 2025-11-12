@@ -4,7 +4,7 @@ A powerful Next.js application that creates professional image banners with cust
 
 ## ✨ Features
 
-- **🎨 12 Professional Designs**: From news alerts to corporate styles
+- **🎨 13 Professional Designs**: From news alerts to corporate styles, plus a blank/transparent option
 - **⚡ Direct Image URLs**: Works like wsrv.nl for instant embedding
 - **🖼️ High Quality Output**: 1080×1350 resolution with optimized compression
 - **📱 Preview Mode**: Interactive preview with download options
@@ -17,7 +17,7 @@ A powerful Next.js application that creates professional image banners with cust
 - `image` → Source image URL (required)
 - `title` → Text overlay for banner
 - `website` → Brand/website name (optional)
-- `design` → Design variant: `default`, `design1`-`design12`
+- `design` → Design variant: `default`, `design1`-`design12`, `blank`
 - `format` → Output format: `jpeg` (default) or `png`
 - `preview` → Set to `true` for interactive preview
 - `w` → Width in pixels (default: 1080)
@@ -109,6 +109,17 @@ fetch('https://your-domain.com/api/direct-image?image=https://picsum.photos/800/
 fetch('https://your-domain.com/api/direct-image?image=https://picsum.photos/800/600&title=METALLIC%20SIGNAL&website=ModernNews.com&design=design12')
 ```
 
+#### Design: Blank - ⬜ Completely Transparent (No Overlay)
+```javascript
+fetch('https://your-domain.com/api/direct-image?image=https://picsum.photos/800/600&title=&website=&design=blank')
+```
+Perfect for when you want the raw image without any background, text, or overlay elements. The title and website parameters are ignored with this design.
+
+**Also available in bundled-font-overlay:**
+```javascript
+fetch('https://your-domain.com/api/bundled-font-overlay?image=https://picsum.photos/800/600&design=blank')
+```
+
 ### 🖼️ Format Variations
 
 #### PNG Format (with transparency support)
@@ -169,7 +180,7 @@ fetch('https://your-domain.com/api/image?image=https://picsum.photos/800/600&tit
 | `default` | Modern gradient | General use | Blue gradient |
 | `design1` | 🚨 Red Alert | Breaking news | Red gradient |
 | `design2` | ⚡ Blue Pulse | Tech news | Electric blue |
-| `design3` | � Yellow Flash | Viral content | Yellow accent |
+| `design3` | 🟡 Yellow Flash | Viral content | Yellow accent |
 | `design4` | 🟥 Gradient Burst | YouTube style | Red-orange |
 | `design5` | 📰 White Noise | Professional | Clean white |
 | `design6` | 🧨 Cyber Alert | Futuristic | Neon effects |
@@ -179,6 +190,9 @@ fetch('https://your-domain.com/api/image?image=https://picsum.photos/800/600&tit
 | `design10` | 🟠 Amber Alert | Authority | Amber warning |
 | `design11` | 🔵 Blue Ribbon | Corporate | Professional blue |
 | `design12` | 🔴 Metallic Red | Modern polish | Metallic red |
+| `blank` | ⬜ Transparent | Raw image | No overlay |
+
+**Note:** The `blank` design returns the image without any overlay and is available in both `/api/direct-image` and `/api/bundled-font-overlay` endpoints.
 
 ## 🔧 Advanced Usage
 

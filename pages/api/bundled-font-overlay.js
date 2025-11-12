@@ -84,6 +84,7 @@ export default async function handler(req, res) {
     const website = decodeURIComponent(rawParams.website || 'Website.com');
     const w = rawParams.w || '1080';
     const h = rawParams.h || '1350';
+    const design = rawParams.design || 'default';
 
     // Debug UTF-8 decoding
     console.log('🔤 UTF-8 Parameter Decoding:');
@@ -122,6 +123,28 @@ export default async function handler(req, res) {
         fit: 'cover',
         position: 'center'
       });
+
+    // Handle blank design - return image without any overlay
+    if (design === 'blank') {
+      console.log('🔲 Blank design requested - returning raw image without overlay');
+      
+      const finalImage = await processedImage
+        .jpeg({ quality: 90 })
+        .toBuffer();
+        
+      console.log('✅ Blank image generated:', finalImage.length, 'bytes');
+      
+      // Set response headers
+      res.setHeader('Content-Type', 'image/jpeg');
+      res.setHeader('Content-Disposition', 'inline; filename="overlay-blank.jpg"');
+      res.setHeader('Content-Length', String(finalImage.length));
+      res.setHeader('Cache-Control', 'public, max-age=300');
+      res.setHeader('X-Design', 'blank');
+      
+      // Send the image without overlay
+      res.send(finalImage);
+      return;
+    }
 
     console.log('📝 Generating SVG with bundled fonts...');
     
