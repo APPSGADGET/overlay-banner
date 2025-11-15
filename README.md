@@ -11,9 +11,11 @@ A powerful Next.js application that creates professional image banners with cust
 - **🔗 Multiple Formats**: JPEG and PNG support
 - **🚀 Fast Processing**: Server-side rendering with Sharp image processing
 - **🌐 Public API**: No authentication required
+- **🔴 Reddit Integration**: Extract and process images directly from Reddit posts
 
 ## 🔧 API Parameters
 
+### Direct Image & Bundled Font Overlay
 - `image` → Source image URL (required)
 - `title` → Text overlay for banner
 - `website` → Brand/website name (optional)
@@ -23,6 +25,14 @@ A powerful Next.js application that creates professional image banners with cust
 - `w` → Width in pixels (default: 1080)
 - `h` → Height in pixels (default: 1350)
 
+### Reddit Image Extractor
+- `url` → Reddit post URL (required)
+- `title` → Text overlay for banner (optional)
+- `website` → Brand/website name (optional)
+- `w` → Width in pixels (default: 1080)
+- `h` → Height in pixels (default: 1350)
+- `design` → Design variant (optional, default: no overlay unless title/website provided)
+
 ## 🚀 API Endpoints
 
 ### 1. Direct Image URL (recommended)
@@ -30,12 +40,24 @@ A powerful Next.js application that creates professional image banners with cust
 https://your-domain.com/api/direct-image?image=IMAGE_URL&title=TITLE&design=DESIGN
 ```
 
-### 2. Preview Mode
+### 2. Reddit Image Extractor
+```
+https://your-domain.com/api/reddit-image?url=REDDIT_POST_URL&title=TITLE&website=WEBSITE
+```
+Automatically extracts images from Reddit posts and applies overlays. Supports:
+- Single images
+- Gallery posts (multiple images)
+- External image links
+- JSON output or direct JPEG with overlay
+
+**Frontend UI:** Visit `/reddit` for an interactive interface to extract and process Reddit images.
+
+### 3. Preview Mode
 ```
 https://your-domain.com/?image=IMAGE_URL&title=TITLE&preview=true
 ```
 
-### 3. JSON Metadata (API Endpoint)
+### 4. JSON Metadata (API Endpoint)
 ```
 https://your-domain.com/api/image?image=IMAGE_URL&title=TITLE
 ```
@@ -120,7 +142,68 @@ Perfect for when you want the raw image without any background, text, or overlay
 fetch('https://your-domain.com/api/bundled-font-overlay?image=https://picsum.photos/800/600&design=blank')
 ```
 
-### 🖼️ Format Variations
+### � Reddit Image Integration
+
+#### Extract Image URLs from Reddit Post (JSON)
+```javascript
+// Get JSON response with all image URLs from a Reddit post
+fetch('https://your-domain.com/api/reddit-image?url=https://www.reddit.com/r/pics/comments/abc123/cool_photo/')
+  .then(response => response.json())
+  .then(data => console.log(data));
+
+// Response:
+{
+  "success": true,
+  "count": 1,
+  "images": [
+    "https://i.redd.it/xyz123.jpg"
+  ],
+  "post_url": "https://www.reddit.com/r/pics/comments/abc123/cool_photo/"
+}
+```
+
+#### Reddit Image with Overlay (Direct JPEG)
+```javascript
+// Extract Reddit image and apply overlay in one request
+fetch('https://your-domain.com/api/reddit-image?url=https://www.reddit.com/r/pics/comments/abc123/cool_photo/&title=FROM%20REDDIT&website=Reddit.com')
+  .then(response => response.blob())
+  .then(blob => {
+    // Use the processed image with overlay
+    const imgUrl = URL.createObjectURL(blob);
+    document.querySelector('img').src = imgUrl;
+  });
+```
+
+#### Reddit Gallery Support
+```javascript
+// Automatically extracts all images from Reddit gallery posts
+fetch('https://your-domain.com/api/reddit-image?url=https://www.reddit.com/r/pics/comments/gallery_post/')
+  .then(response => response.json())
+  .then(data => {
+    console.log(`Found ${data.count} images in gallery`);
+    data.images.forEach(img => console.log(img));
+  });
+
+// Response for gallery:
+{
+  "success": true,
+  "count": 3,
+  "images": [
+    "https://i.redd.it/image1.jpg",
+    "https://i.redd.it/image2.jpg",
+    "https://i.redd.it/image3.jpg"
+  ],
+  "post_url": "..."
+}
+```
+
+#### Reddit Image with Custom Dimensions
+```javascript
+// Process Reddit image with custom size and design
+fetch('https://your-domain.com/api/reddit-image?url=https://www.reddit.com/r/EarthPorn/comments/xyz/&title=EARTH%20PORN&w=1920&h=1080&design=design3')
+```
+
+### �🖼️ Format Variations
 
 #### PNG Format (with transparency support)
 ```javascript
@@ -196,9 +279,57 @@ fetch('https://your-domain.com/api/image?image=https://picsum.photos/800/600&tit
 
 ## 🔧 Advanced Usage
 
+### 🌐 Reddit Image Fetcher UI
+
+Visit `/reddit` on your deployed app for a full-featured web interface:
+
+```
+https://your-domain.com/reddit
+```
+
+**Features:**
+- 📥 Paste any Reddit post URL to extract images
+- 🖼️ Supports single images and gallery posts
+- 🎨 Apply 13 design variants with custom text overlays
+- 💾 Download processed banners directly
+- 📋 Copy image URLs to clipboard
+- ⚡ Real-time preview of generated banners
+
+### Reddit Post to Banner
+```javascript
+// Automatically fetch Reddit image and create banner
+const redditUrl = 'https://www.reddit.com/r/itookapicture/comments/xyz/amazing_sunset/';
+const bannerUrl = `https://your-domain.com/api/reddit-image?url=${encodeURIComponent(redditUrl)}&title=AMAZING%20SUNSET&website=Reddit.com&design=design1`;
+
+// Use in img tag
+document.querySelector('img').src = bannerUrl;
+```
+
+### Reddit Gallery Processing
+```javascript
+// Extract all images from Reddit gallery
+async function processRedditGallery(redditUrl) {
+  const response = await fetch(`https://your-domain.com/api/reddit-image?url=${encodeURIComponent(redditUrl)}`);
+  const data = await response.json();
+  
+  if (data.success) {
+    console.log(`Found ${data.count} images:`);
+    data.images.forEach((imgUrl, index) => {
+      console.log(`Image ${index + 1}: ${imgUrl}`);
+      // Process each image with overlay
+      const overlayUrl = `https://your-domain.com/api/direct-image?image=${encodeURIComponent(imgUrl)}&title=Image%20${index + 1}&design=design2`;
+      // Use overlayUrl as needed
+    });
+  }
+}
+```
+
 ### Embedding in HTML
 ```html
 <img src="https://your-domain.com/api/direct-image?image=https://picsum.photos/800/600&title=Embedded%20Banner&design=design1" alt="News Banner" />
+
+<!-- Reddit image with overlay -->
+<img src="https://your-domain.com/api/reddit-image?url=https://reddit.com/r/pics/comments/abc/&title=REDDIT%20PIC&design=design3" alt="Reddit Banner" />
 ```
 
 ### Social Media Integration
