@@ -674,6 +674,99 @@ function generateDesignVariant(design, params) {
         </svg>
       `;
 
+    case 'emphasis': // Emphasis - Headline style with highlighted keywords
+      // Function to identify emphasis words (typically nouns, important words)
+      const emphasisWords = ['BREAKING', 'URGENT', 'NEW', 'EXCLUSIVE', 'ALERT', 'UPDATE', 'LIVE', 'NOW', 'JUST', 'MAJOR', 'CRITICAL', 'IMPORTANT'];
+      
+      // Create multi-colored headline effect
+      const emphasisTitleLines = titleLines.map((line, lineIndex) => {
+        const words = line.split(' ');
+        let xOffset = width / 2;
+        
+        // Calculate total line width to center properly
+        const avgCharWidth = fontSize * 0.55;
+        const lineWidth = line.length * avgCharWidth;
+        const startX = (width - lineWidth) / 2;
+        
+        // Generate word spans with emphasis detection
+        const wordSpans = words.map((word, wordIndex) => {
+          const shouldEmphasize = emphasisWords.includes(word.toUpperCase()) || 
+                                  word.length > 8 || // Long words get emphasis
+                                  (wordIndex === 0 && lineIndex === 0); // First word emphasis
+          
+          const wordColor = shouldEmphasize ? '#FFD700' : 'white'; // Gold for emphasis, white for normal
+          const wordWeight = shouldEmphasize ? '900' : '700';
+          const wordStroke = shouldEmphasize ? 'rgba(255,100,0,0.8)' : 'rgba(0,0,0,0.9)';
+          const strokeWidth = shouldEmphasize ? '2.5' : '1.5';
+          
+          return `<tspan 
+                    fill="${wordColor}" 
+                    font-weight="${wordWeight}"
+                    stroke="${wordStroke}"
+                    stroke-width="${strokeWidth}"
+                    paint-order="stroke fill"
+                    style="text-shadow: 0 0 10px ${shouldEmphasize ? 'rgba(255,215,0,0.5)' : 'transparent'};">
+                    ${word}${wordIndex < words.length - 1 ? ' ' : ''}
+                  </tspan>`;
+        }).join('');
+        
+        return `
+          <text x="${width/2}" 
+                y="${startY + (lineIndex * lineHeight) + fontSize}" 
+                text-anchor="middle" 
+                dominant-baseline="middle"
+                font-family="Noto Sans, Inter, sans-serif" 
+                font-size="${fontSize}" 
+                style="text-transform: uppercase; letter-spacing: 2px;">
+            ${wordSpans}
+          </text>
+        `;
+      }).join('');
+      
+      return `
+        <svg width="${width}" height="${height}" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="emphasisGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" style="stop-color:rgb(20,20,20);stop-opacity:0.3"/>
+              <stop offset="30%" style="stop-color:rgb(0,0,0);stop-opacity:0.7"/>
+              <stop offset="70%" style="stop-color:rgb(0,0,0);stop-opacity:0.9"/>
+              <stop offset="100%" style="stop-color:rgb(0,0,0);stop-opacity:0.95"/>
+            </linearGradient>
+            <filter id="emphasisGlow">
+              <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+              <feMerge>
+                <feMergeNode in="coloredBlur"/>
+                <feMergeNode in="SourceGraphic"/>
+              </feMerge>
+            </filter>
+          </defs>
+          
+          <!-- Dark gradient background for contrast -->
+          <rect x="0" y="${height - gradientHeight}" width="${width}" height="${gradientHeight}" fill="url(#emphasisGradient)"/>
+          
+          <!-- Title with emphasis styling -->
+          ${emphasisTitleLines}
+          
+          <!-- Website text with subtle styling -->
+          ${decodedWebsite ? `
+            <text x="${width/2}" 
+                  y="${startY + totalTextHeight + titleWebsiteGap + 20}" 
+                  text-anchor="middle" 
+                  dominant-baseline="middle"
+                  font-family="Noto Sans, Inter, sans-serif" 
+                  font-weight="600" 
+                  font-size="${Math.min(width * 0.02, 22)}" 
+                  fill="#FFD700" 
+                  stroke="rgba(0,0,0,0.8)" 
+                  stroke-width="1"
+                  paint-order="stroke fill"
+                  style="letter-spacing: 2px; text-transform: uppercase;">
+              ${decodedWebsite.toUpperCase()}
+            </text>
+          ` : ''}
+        </svg>
+      `;
+
     default: // Default design (original)
       return `
         <svg width="${width}" height="${height}" xmlns="http://www.w3.org/2000/svg">
