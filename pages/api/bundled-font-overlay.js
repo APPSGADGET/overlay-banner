@@ -218,6 +218,17 @@ export default async function handler(req, res) {
     const bottomMargin = 20;
     const svgHeight = Math.max(200, websiteY + bottomMargin + 10); // Minimum 200px, or calculated height
     
+    // Get absolute font paths for @font-face
+    const notoSansBoldPath = path.join(process.cwd(), 'fonts', 'NotoSans-Bold.ttf');
+    const interBoldPath = path.join(process.cwd(), 'fonts', 'Inter-Bold.ttf');
+    
+    console.log('📁 Font paths:', {
+      notoSansBold: notoSansBoldPath,
+      interBold: interBoldPath,
+      notoExists: fs.existsSync(notoSansBoldPath),
+      interExists: fs.existsSync(interBoldPath)
+    });
+    
     const svg = `<?xml version="1.0" encoding="UTF-8"?>
       <svg width="${targetWidth}" height="${svgHeight}" xmlns="http://www.w3.org/2000/svg">
         <defs>
@@ -230,6 +241,31 @@ export default async function handler(req, res) {
         </defs>
         
         <style>
+          @font-face {
+            font-family: 'Noto Sans';
+            src: url('file://${notoSansBoldPath}') format('truetype');
+            font-weight: 700;
+            font-style: normal;
+          }
+          @font-face {
+            font-family: 'Noto Sans';
+            src: url('file://${notoSansBoldPath}') format('truetype');
+            font-weight: 900;
+            font-style: normal;
+          }
+          @font-face {
+            font-family: 'Inter';
+            src: url('file://${interBoldPath}') format('truetype');
+            font-weight: 700;
+            font-style: normal;
+          }
+          @font-face {
+            font-family: 'Inter';
+            src: url('file://${interBoldPath}') format('truetype');
+            font-weight: 900;
+            font-style: normal;
+          }
+          
           .title-text { 
             font-family: "Noto Sans", "Inter", sans-serif; 
             font-size: 64px; 
