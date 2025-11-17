@@ -198,14 +198,14 @@ export default async function handler(req, res) {
     }
     
     // Wrap the title text
-    const titleLines = wrapText(titleText, contentWidth, 48);
-    const lineHeight = 50; // Line spacing between title lines
+    const titleLines = wrapText(titleText, contentWidth, 64);
+    const lineHeight = 70; // Line spacing between title lines
     const totalTitleHeight = titleLines.length * lineHeight;
     
     // Dynamic positioning to prevent overlap
     const topMargin = 20; // Top margin
     const gapBetweenTitleAndWebsite = 25; // Minimum gap between title and website
-    const websiteTextSize = 24; // Website text font size
+    const websiteTextSize = 32; // Website text font size
     
     // Calculate title start position
     const titleStartY = topMargin + (lineHeight * 0.8); // Start from top with margin
@@ -232,22 +232,22 @@ export default async function handler(req, res) {
         <style>
           .title-text { 
             font-family: "Noto Sans", "Inter", sans-serif; 
-            font-size: 48px; 
-            font-weight: 700;
+            font-size: 64px; 
+            font-weight: 900;
             fill: white; 
             text-anchor: middle;
             dominant-baseline: middle;
             word-spacing: normal;
-            letter-spacing: 1px;
+            letter-spacing: 2px;
           }
           .website-text { 
             font-family: "Noto Sans", "Inter", sans-serif; 
-            font-size: 24px; 
-            font-weight: 400;
+            font-size: 32px; 
+            font-weight: 700;
             fill: #FFD700; 
             text-anchor: middle;
             dominant-baseline: middle;
-            letter-spacing: 2px;
+            letter-spacing: 3px;
           }
         </style>
         
