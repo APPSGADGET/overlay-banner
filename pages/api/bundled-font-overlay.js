@@ -321,9 +321,14 @@ export default async function handler(req, res) {
       
     console.log('✅ Final image generated:', finalImage.length, 'bytes');
     
-    // Set response headers with proper filename and content length
+    // Generate unique filename using timestamp and random string
+    const timestamp = Date.now();
+    const randomStr = Math.random().toString(36).substring(2, 8);
+    const uniqueFilename = `overlay-${timestamp}-${randomStr}.jpg`;
+    
+    // Set response headers with unique filename and content length
     res.setHeader('Content-Type', 'image/jpeg');
-    res.setHeader('Content-Disposition', 'inline; filename="overlay.jpg"');
+    res.setHeader('Content-Disposition', `inline; filename="${uniqueFilename}"`);
     res.setHeader('Content-Length', String(finalImage.length));
     res.setHeader('Cache-Control', 'public, max-age=300');
     res.setHeader('X-Font-System', 'bundled-inter');
