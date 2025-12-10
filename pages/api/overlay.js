@@ -2440,11 +2440,40 @@ const tagalogQuotes = [
     // Function to detect emphasis keywords and create highlight segments with multi-color support
     function parseHighlights(text, maxHighlights = 3) {
       // Common emphasis keywords to automatically highlight (fallback list)
-      const emphasisKeywords = [
-        'NEW', 'FREE', 'NOW', 'EXCLUSIVE', 'BREAKING', 'ALERT', 'LIMITED',
-        'SALE', 'HOT', 'TRENDING', 'VIRAL', 'LIVE', 'TODAY', 'URGENT',
-        'SPECIAL', 'BONUS', 'WIN', 'BEST', 'TOP', 'AMAZING', 'INCREDIBLE'
-      ];
+   const emphasisKeywords = [
+  '120HZ', '144HZ', '5G READY', 'ADVANCED', 'AI CAMERA', 'AI ENHANCED', 'AI FEATURES',
+  'AI POWERED', 'AI SMART MODE', 'AI-READY', 'AI-GENERATED', 'COPYRIGHTED', 'COPYRIGHT', 'PROBE', 'PROBES', 'ALERT', 'AMAZING', 'AMOLED', 'ANTUTU SCORE',
+  'BATTERY BOOST', 'BATTERY DRAIN TEST', 'BATTERY TEST', 'BENCHMARK', 'BETA', 'BEST',
+  'BEZEL-LESS DISPLAY', 'BIG UPDATE', 'BLUETOOTH 5.4', 'BONUS', 'BOOSTED', 'BREAKING',
+  'BREAKING TECH', 'BREAKTHROUGH', 'BUDGET KING', 'CAMERA SAMPLES', 'CAMERA TEST',
+  'CAMERA UPGRADE', 'CERTIFICATION SPOTTED', 'CHARGING TEST', 'CHIPSET UPGRADE',
+  'CHROMEBOOK', 'COMING SOON', 'CONFIRMED', 'CRITICAL UPDATE', 'CURVED DISPLAY',
+  'CLOUD POWERED', 'CPU BOOST', 'DEVICE', 'DISPLAY TECH', 'DOLBY ATMOS', 'DONT MISS',
+  'DURABILITY', 'EARLY ACCESS', 'ECO TECH', 'ENHANCED', 'ESPORTS READY', 'EXCLUSIVE',
+  'FAST CHARGING', 'FEATURED', 'FCC LISTING', 'FIRMWARE', 'FIRST IMPRESSIONS',
+  'FIRST LOOK', 'FIRST SALE', 'FIRST IN PH', 'FLASH DEAL', 'FOLDABLE TECH', 'FREE',
+  'FULL REVIEW', 'GADGET', 'GAMING MODE', 'GAMING RIG', 'GAMING TEST', 'GAME CHANGER',
+  'GEEKBENCH SCORE', 'GEN', 'GLOBAL LAUNCH', 'GRAPHICS POWER', 'GREEN TECH',
+  'HANDS-ON', 'HANDS-ON REVIEW', 'HDR10+', 'HIGHLIGHT', 'HI-RES AUDIO', 'HOT', 
+  'HOT DEAL', 'HOT UPDATE', 'INCREDIBLE', 'INNOVATION', 'INSANE', 'IP68 WATERPROOF',
+  'IP54 DUSTPROOF', 'IR BLASTER', 'JUST IN', 'LAUNCH', 'LAUNCH EVENT', 'LEAKED',
+  'LEAKED PHOTOS', 'LEAKED RENDERS', 'LATEST TECH', 'LATEST UPDATE', 'LAPTOP',
+  'LIMITED', 'LIMITED STOCK', 'LIVE', 'MAJOR UPGRADE', 'MAX', 'MEGA SALE', 'MEDIATEK',
+  'MODEL APPROVED', 'MUST SEE', 'NFC', 'NEW', 'NEW FEATURE', 'NEW MODEL APPROVED',
+  'NEW UPDATE', 'NEXT GEN', 'NIGHT MODE BOOST', 'NOW', 'OFFICIAL', 'OFFICIAL IMAGES',
+  'ON-DEVICE AI', 'OPTIMIZED', 'PATCH', 'PATCH NOTES', 'PC-LEVEL POWER',
+  'PERFORMANCE', 'PERFORMANCE MODE', 'PERISCOPE CAMERA', 'PH LAUNCH', 'PLUS',
+  'PREORDER', 'PRICE DROP', 'PRO', 'RAY TRACING', 'REAL-WORLD TEST', 'REVEALED',
+  'REVOLUTIONARY', 'ROLLING OUT', 'RTX POWERED', 'SALE', 'SATELLITE CONNECTIVITY',
+  'SATELLITE SOS', 'SECURITY PATCH', 'SLIM BEZELS', 'SMARTPHONE', 'SMARTWATCH',
+  'SNAPDRAGON', 'SOFTWARE UPDATE', 'SPECS', 'SPECIAL', 'SPOTLIGHT', 'STABLE',
+  'STARTS NOW', 'STEAL PRICE', 'STEREO SPEAKERS', 'SUPERCHARGE', 'SUPERCHARGED',
+  'SUSTAINABLE TECH', 'SYSTEM UPDATE', 'TABLET', 'TECH', 'TECH ALERT',
+  'TEARDOWN', 'TENAA LISTING', 'THERMAL BOOST', 'THERMAL TEST', 'TOP', 'TRENDING',
+  'TRENDING TECH', 'TURBO CHARGE', 'TURBO MODE', 'TYPE-C', 'UFS 4.0', 'ULTRA',
+  'ULTRA CLEAR', 'ULTRA WIDE', 'ULTIMATE', 'UNBELIEVABLE', 'UNBOXING', 'UPDATE',
+  'URGENT', 'USB-C', 'VIRAL', 'WATERPROOF', 'WEARABLE', 'WIFI 7', 'WIN', 'WOW'
+];
       
       // Stopwords to ignore
       const stopwords = new Set([
@@ -2973,9 +3002,9 @@ const tagalogQuotes = [
           
           /* Generate dynamic highlight color classes from URL parameter or use defaults */
           ${(() => {
-            const defaultColors = ['#FFD700', '#FF8C00', '#00FFFF', '#1E90FF', '#F4E04D', '#C084FC'];
+            const defaultColors = ['#FFD700', '#FF8C00', '#00FFFF', '#1E90FF', '#F4E04D', '#C084FC', '#00FF4C', '#FF0000', '#003CFF', '#FF00C8', '#FFEA00'];
             const colors = highlightColors.length > 0 ? highlightColors : defaultColors;
-            return colors.slice(0, 6).map((color, idx) => {
+            return colors.slice(0, 11).map((color, idx) => {
               // Extract RGB for glow effect
               const hexToRgb = (hex) => {
                 const result = /^#?([a-f\\d]{2})([a-f\\d]{2})([a-f\\d]{2})$/i.exec(hex);
@@ -3166,10 +3195,11 @@ const tagalogQuotes = [
           
           // For bebas design with highlights enabled, parse and render with tspan
           if (design === 'bebas' && selectedDesign.enableHighlight) {
-            // Default color palette (Gold, Orange, Cyan, Electric Blue, Soft Yellow, Lavender)
-            const defaultColors = ['#FFD700', '#FF8C00', '#00FFFF', '#1E90FF', '#F4E04D', '#C084FC'];
+            // Extended color palette with more vibrant emphasis colors
+            // Gold, Orange, Cyan, Electric Blue, Soft Yellow, Lavender, Lime Green, Red, Royal Blue, Magenta, Vibrant Yellow
+            const defaultColors = ['#FFD700', '#FF8C00', '#00FFFF', '#1E90FF', '#F4E04D', '#C084FC', '#00FF4C', '#FF0000', '#003CFF', '#FF00C8', '#FFEA00'];
             const colors = highlightColors.length > 0 ? highlightColors : defaultColors;
-            const maxHighlights = Math.min(colors.length, 6); // Limit to 6 highlights
+            const maxHighlights = Math.min(colors.length, 11); // Increased to support more highlights
             
             // Get font attributes from design config for explicit tspan attributes
             const fontFamily = selectedDesign.fontFamily || 'Bebas Neue';
