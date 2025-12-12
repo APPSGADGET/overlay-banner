@@ -2474,28 +2474,11 @@ const tagalogQuotes = [
   'ULTRA CLEAR', 'ULTRA WIDE', 'ULTIMATE', 'UNBELIEVABLE', 'UNBOXING', 'UPDATE',
   'URGENT', 'USB-C', 'VIRAL', 'WATERPROOF', 'WEARABLE', 'WIFI 7', 'WIN', 
   
+    // Breaking/Attention-Grabbing Keywords
+  'BREAKING', 'SHOCKING', 'ALERT', 'MUST SEE', 'UNBELIEVABLE', 'VIRAL', 'OMG', 'CAN’T MISS', 'TRENDING NOW', 'EXCLUSIVE', 'HOT NEWS', 'LATEST', 'NEWSFLASH', 'SENSATIONAL', 'WOW', 'UPDATE', 'INSANE', 'EPIC', 'BREAKTHROUGH',
+
   
-   'APPLE', 'SAMSUNG', 'HUAWEI', 'OPPO', 'VIVO', 'XIAOMI', 'ONEPLUS', 'REALME', 'LENOVO', 'ASUS', 'DELL', 'HP', 'MICROSOFT', 'GOOGLE', 'SONY', 'LG', 'ACER', 'NOKIA', 'MOTOROLA', 'AMAZON', 'META', 'TESLA', 'INTEL', 'AMD', 'NVIDIA', 'ROG', 'RAZER', 'PULSAR', 'ALCATEL', 'BLACKBERRY',
-   'BROADCOM', 'HTC', 'ZTE', 'SIEGE', 'HONOR', 'VODAFONE', 'TCL', 'FUJITSU', 'PANASONIC', 'SHARP', 'SPECK', 'LOGITECH', 'KINGSTON', 'SANDISK', 'SEAGATE', 'WD', 'CRUCIAL', 'TP-LINK', 'NETGEAR',
-   'TRUMP','ORACLE','SHELL','EXXON','CHEVRON','BP','TOTALENERGIES','SAUDIARAMCO','IBM','SAP','SIEMENS','BOEING','LOCKHEEDMARTIN','RAYTHEON','NORTHROPCORP','GENERALDYNAMICS','BAE','BAIDU','ALIBABA','JD.COM','TENCENT','NETEASE',
-   'CRYPTO', 'BITCOIN', 'ETHEREUM', 'BLOCKCHAIN', 'NFT', 'METAVERSE', 'DEFI', 'WEB3',
-   'DOORDASH', 'UBER', 'LYFT', 'SPOTIFY', 'NETFLIX', 'DISNEY+', 'HULU', 'AMAZON PRIME', 'HBO MAX', 'PEACOCK',
-   'TESLA', 'SPACE-X', 'NEURALINK', 'THE BORING COMPANY',
-   'RIVIAN', 'LUCID', 'NIRO', 'FISKER', 'BYD', 'XPENG', 'NIO',
-   'CHATGPT', 'DALLE', 'MIDJOURNEY', 'STABLEDIFFUSION', 'OPENAI',
-   'DISNEY', 'PIXAR', 'MARVEL', 'STAR WARS', 'LUCASFILM',
-   'ADOBE', 'PHOTOSHOP', 'ILLUSTRATOR', 'PREMIERE PRO', 'AFTER EFFECTS',
-   'LIGHTROOM', 'INDESIGN', 'XD', 'ACROBAT',
-   'GOOGLE MAPS', 'YOUTUBE', 'GMAIL', 'GOOGLE DRIVE', 'GOOGLE DOCS',
-   'MICROSOFT OFFICE', 'WORD', 'EXCEL', 'POWERPOINT', 'OUTLOOK',
-   'CISCO', 'VMWARE', 'REDHAT', 'UBUNTU', 'DEBIAN',
-   'KUBERNETES', 'DOCKER', 'JENKINS', 'GITHUB', 'GITLAB',
-   'AWS', 'AZURE', 'GOOGLE CLOUD', 'CLOUDFLARE',
-   '4K', '8K', 'HDR', 'OLED', 'QLED', 'MINILED',
-   '5NM', '3NM', 'NANOMETER', 'FINFET', 'GAAFET',
-   'LITHIUM-ION', 'SOLID-STATE', 'GRAPHENE BATTERY',
-   'HOME CREDIT', 'NUBIA', 'INFINIX', 'TECNO', 'ITEL',
-   'WOW'
+  'WOW'
 ];
       
       // Stopwords to ignore
@@ -3261,41 +3244,28 @@ const tagalogQuotes = [
         <rect x="${padding}" y="${Math.round(titleEndY + 10)}" width="${contentWidth}" height="4" fill="${selectedDesign.websiteColor}"/>
         ` : ''}
         
-        <!-- Website Text with Social Media Icons - Dynamically positioned with design styling -->
+        <!-- Website Text with Orange Horizontal Lines - Centered with decorative lines -->
         ${website ? (() => {
-          // Calculate icon size based on website text size (larger, more visible)
-          const iconSize = selectedDesign.websiteSize * 1.1;
-          const iconSpacing = iconSize * 0.15; // Space between icons (tight grouping)
-          const textGap = iconSize * 4.0; // Very large gap between last icon and text to prevent overlap
+          // Calculate text width estimation for centering
+          const estimatedTextWidth = websiteText.length * selectedDesign.websiteSize * 0.6;
+          const lineLength = Math.min(200, (targetWidth - estimatedTextWidth - 100) / 2); // Length of each line
+          const lineY = Math.round(websiteY);
+          const lineThickness = 3; // Thickness of the orange lines
+          const gapFromText = 20; // Gap between line and text
           
-          // Position icons and text more to the right
-          const iconGroupWidth = (iconSize * 3) + (iconSpacing * 2);
-          const iconStartX = Math.round(targetWidth * 0.35); // Start icons at 35% from left (more to the right)
-          const iconY = Math.round(websiteY - (iconSize / 2));
-          const textX = iconStartX + iconGroupWidth + textGap; // Text starts well after icons
-          
+          // Calculate positions
+          const textX = Math.round(targetWidth / 2);
+          const leftLineEnd = Math.round(textX - estimatedTextWidth / 2 - gapFromText);
+          const leftLineStart = Math.round(leftLineEnd - lineLength);
+          const rightLineStart = Math.round(textX + estimatedTextWidth / 2 + gapFromText);
+          const rightLineEnd = Math.round(rightLineStart + lineLength);
+
           return `
-        <!-- Social Media Icons -->
-        <!-- Instagram Icon -->
-        <g transform="translate(${iconStartX}, ${iconY})">
-          <rect width="${iconSize}" height="${iconSize}" rx="${iconSize * 0.22}" fill="white"/>
-          <circle cx="${iconSize/2}" cy="${iconSize/2}" r="${iconSize * 0.22}" fill="none" stroke="black" stroke-width="${iconSize * 0.09}"/>
-          <circle cx="${iconSize * 0.72}" cy="${iconSize * 0.28}" r="${iconSize * 0.08}" fill="black"/>
-        </g>
+        <!-- Orange decorative lines around website text -->
+        <line x1="${leftLineStart}" y1="${lineY}" x2="${leftLineEnd}" y2="${lineY}" stroke="#FF8C00" stroke-width="${lineThickness}" stroke-linecap="round"/>
+        <line x1="${rightLineStart}" y1="${lineY}" x2="${rightLineEnd}" y2="${lineY}" stroke="#FF8C00" stroke-width="${lineThickness}" stroke-linecap="round"/>
         
-        <!-- Facebook Icon -->
-        <g transform="translate(${iconStartX + iconSize + iconSpacing}, ${iconY})">
-          <rect width="${iconSize}" height="${iconSize}" rx="${iconSize * 0.12}" fill="white"/>
-          <path d="M ${iconSize * 0.55} ${iconSize * 0.4} L ${iconSize * 0.55} ${iconSize * 0.25} C ${iconSize * 0.55} ${iconSize * 0.18} ${iconSize * 0.6} ${iconSize * 0.15} ${iconSize * 0.67} ${iconSize * 0.15} L ${iconSize * 0.72} ${iconSize * 0.15} L ${iconSize * 0.72} ${iconSize * 0.28} L ${iconSize * 0.67} ${iconSize * 0.28} C ${iconSize * 0.64} ${iconSize * 0.28} ${iconSize * 0.62} ${iconSize * 0.3} ${iconSize * 0.62} ${iconSize * 0.33} L ${iconSize * 0.62} ${iconSize * 0.4} L ${iconSize * 0.72} ${iconSize * 0.4} L ${iconSize * 0.7} ${iconSize * 0.52} L ${iconSize * 0.62} ${iconSize * 0.52} L ${iconSize * 0.62} ${iconSize * 0.85} L ${iconSize * 0.48} ${iconSize * 0.85} L ${iconSize * 0.48} ${iconSize * 0.52} L ${iconSize * 0.38} ${iconSize * 0.52} L ${iconSize * 0.38} ${iconSize * 0.4} L ${iconSize * 0.55} ${iconSize * 0.4}" fill="black"/>
-        </g>
-        
-        <!-- X (Twitter) Icon -->
-        <g transform="translate(${iconStartX + (iconSize + iconSpacing) * 2}, ${iconY})">
-          <rect width="${iconSize}" height="${iconSize}" rx="${iconSize * 0.12}" fill="white"/>
-          <path d="M ${iconSize * 0.68} ${iconSize * 0.22} L ${iconSize * 0.56} ${iconSize * 0.38} L ${iconSize * 0.68} ${iconSize * 0.78} L ${iconSize * 0.58} ${iconSize * 0.78} L ${iconSize * 0.5} ${iconSize * 0.5} L ${iconSize * 0.42} ${iconSize * 0.78} L ${iconSize * 0.32} ${iconSize * 0.78} L ${iconSize * 0.44} ${iconSize * 0.38} L ${iconSize * 0.32} ${iconSize * 0.22} L ${iconSize * 0.42} ${iconSize * 0.22} L ${iconSize * 0.5} ${iconSize * 0.35} L ${iconSize * 0.58} ${iconSize * 0.22} L ${iconSize * 0.68} ${iconSize * 0.22}" fill="black" stroke="black" stroke-width="${iconSize * 0.02}" stroke-linejoin="miter"/>
-        </g>
-        
-        <text x="${textX}" y="${Math.round(websiteY)}" class="website-text ${design === 'pokemon' ? 'pokemon-website' : ''} ${design === 'bold' ? 'bold-website' : ''} ${design === 'boldblue' ? 'boldblue-website' : ''} ${['boldblue', 'bold', 'energetic', 'popart', 'viral'].includes(design) ? 'bold-text' : ''}" text-anchor="start">${websiteText}</text>
+        <text x="${textX}" y="${Math.round(websiteY)}" class="website-text ${design === 'pokemon' ? 'pokemon-website' : ''} ${design === 'bold' ? 'bold-website' : ''} ${design === 'boldblue' ? 'boldblue-website' : ''} ${['boldblue', 'bold', 'energetic', 'popart', 'viral'].includes(design) ? 'bold-text' : ''}" text-anchor="middle">${websiteText}</text>
         `;
         })() : ''}
         
