@@ -2208,6 +2208,15 @@ const tagalogQuotes = [
         'softyellow': '#F4E04D',
         'soft-yellow': '#F4E04D',
         'lavender': '#C084FC',
+        'limegreen': '#00FF4C',
+        'lime-green': '#00FF4C',
+        'lime': '#00FF4C',
+        'red': '#FF0000',
+        'royalblue': '#003CFF',
+        'royal-blue': '#003CFF',
+        'magenta': '#FF00C8',
+        'vibrantyellow': '#FFEA00',
+        'vibrant-yellow': '#FFEA00',
         'gray': '#E0E0E0',
         'grey': '#E0E0E0',
         'lightgray': '#D3D3D3',
@@ -2218,6 +2227,41 @@ const tagalogQuotes = [
       
       const normalizedColor = wcParam.toLowerCase().replace(/\s+/g, '');
       websiteColorOverride = colorMap[normalizedColor] || wcParam.trim();
+    }
+    
+    // Parse line color parameter (lc) for horizontal lines around website text
+    const lcParam = rawParams.lc || '';
+    let lineColor = '#FF8C00'; // Default to orange
+    if (lcParam) {
+      // Use same color mapping as website color
+      const colorMap = {
+        'gold': '#FFD700',
+        'orange': '#FF8C00',
+        'cyan': '#00FFFF',
+        'electricblue': '#1E90FF',
+        'electric-blue': '#1E90FF',
+        'softyellow': '#F4E04D',
+        'soft-yellow': '#F4E04D',
+        'lavender': '#C084FC',
+        'limegreen': '#00FF4C',
+        'lime-green': '#00FF4C',
+        'lime': '#00FF4C',
+        'red': '#FF0000',
+        'royalblue': '#003CFF',
+        'royal-blue': '#003CFF',
+        'magenta': '#FF00C8',
+        'vibrantyellow': '#FFEA00',
+        'vibrant-yellow': '#FFEA00',
+        'gray': '#E0E0E0',
+        'grey': '#E0E0E0',
+        'lightgray': '#D3D3D3',
+        'lightgrey': '#D3D3D3',
+        'silver': '#C0C0C0',
+        'white': '#FFFFFF'
+      };
+      
+      const normalizedColor = lcParam.toLowerCase().replace(/\s+/g, '');
+      lineColor = colorMap[normalizedColor] || lcParam.trim();
     }
     
     // Check if we should use quote designs and generate random quotes
@@ -2476,8 +2520,10 @@ const tagalogQuotes = [
   
     // Breaking/Attention-Grabbing Keywords
   'BREAKING', 'SHOCKING', 'ALERT', 'MUST SEE', 'UNBELIEVABLE', 'VIRAL', 'OMG', 'CAN’T MISS', 'TRENDING NOW', 'EXCLUSIVE', 'HOT NEWS', 'LATEST', 'NEWSFLASH', 'SENSATIONAL', 'WOW', 'UPDATE', 'INSANE', 'EPIC', 'BREAKTHROUGH',
-
-  
+    'US', 'SHOCKER', 'REVEALED', 'SECRET', 'TOP SECRET', 'LEAKED', 'EXPOSED', 'MIND-BLOWING', 'GAME-CHANGER',
+  'CHINA', 'JAPAN', 'KOREA', 'EUROPE', 'INDIA', 'RUSSIA', 'BRAZIL', 'CANADA', 'AUSTRALIA', 'UK', 'GERMANY', 'FRANCE', 'ITALY', 'SPAIN', 'MEXICO', 'SINGAPORE', 'MALAYSIA', 'THAILAND', 'VIETNAM',
+  'PHILIPPINES', 'INDONESIA', 'SAUDI ARABIA', 'UAE', 'SOUTH AFRICA',
+   
   'WOW'
 ];
       
@@ -3244,13 +3290,13 @@ const tagalogQuotes = [
         <rect x="${padding}" y="${Math.round(titleEndY + 10)}" width="${contentWidth}" height="4" fill="${selectedDesign.websiteColor}"/>
         ` : ''}
         
-        <!-- Website Text with Orange Horizontal Lines - Centered with decorative lines -->
+        <!-- Website Text with Horizontal Lines - Centered with decorative lines -->
         ${website ? (() => {
           // Calculate text width estimation for centering
           const estimatedTextWidth = websiteText.length * selectedDesign.websiteSize * 0.6;
           const lineLength = Math.min(200, (targetWidth - estimatedTextWidth - 100) / 2); // Length of each line
           const lineY = Math.round(websiteY);
-          const lineThickness = 3; // Thickness of the orange lines
+          const lineThickness = 3; // Thickness of the lines
           const gapFromText = 20; // Gap between line and text
           
           // Calculate positions
@@ -3261,9 +3307,9 @@ const tagalogQuotes = [
           const rightLineEnd = Math.round(rightLineStart + lineLength);
 
           return `
-        <!-- Orange decorative lines around website text -->
-        <line x1="${leftLineStart}" y1="${lineY}" x2="${leftLineEnd}" y2="${lineY}" stroke="#FF8C00" stroke-width="${lineThickness}" stroke-linecap="round"/>
-        <line x1="${rightLineStart}" y1="${lineY}" x2="${rightLineEnd}" y2="${lineY}" stroke="#FF8C00" stroke-width="${lineThickness}" stroke-linecap="round"/>
+        <!-- Decorative lines around website text -->
+        <line x1="${leftLineStart}" y1="${lineY}" x2="${leftLineEnd}" y2="${lineY}" stroke="${lineColor}" stroke-width="${lineThickness}" stroke-linecap="round"/>
+        <line x1="${rightLineStart}" y1="${lineY}" x2="${rightLineEnd}" y2="${lineY}" stroke="${lineColor}" stroke-width="${lineThickness}" stroke-linecap="round"/>
         
         <text x="${textX}" y="${Math.round(websiteY)}" class="website-text ${design === 'pokemon' ? 'pokemon-website' : ''} ${design === 'bold' ? 'bold-website' : ''} ${design === 'boldblue' ? 'boldblue-website' : ''} ${['boldblue', 'bold', 'energetic', 'popart', 'viral'].includes(design) ? 'bold-text' : ''}" text-anchor="middle">${websiteText}</text>
         `;
