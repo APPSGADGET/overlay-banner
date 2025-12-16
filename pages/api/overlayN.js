@@ -3308,8 +3308,8 @@ const tagalogQuotes = [
         ` : ''}
 
         <!-- Breaking News Label (above title) with white background -->
-        <rect x="${Math.round(targetWidth / 2 - 150)}" y="${Math.round(titleStartY - 60)}" width="300" height="45" fill="#FFFFFF" rx="4"/>
-        <text x="${Math.round(targetWidth / 2)}" y="${Math.round(titleStartY - 40)}" fill="#FF0000" font-family="Anton, Bebas Neue, Arial, sans-serif" font-size="32" font-weight="900" text-anchor="middle" letter-spacing="2px">BREAKING NEWS</text>
+        <rect x="${Math.round(targetWidth / 2 - 180)}" y="${Math.round(titleStartY - 110)}" width="360" height="50" fill="#FFFFFF" rx="4"/>
+        <text x="${Math.round(targetWidth / 2)}" y="${Math.round(titleStartY - 63)}" fill="#FF0000" font-family="Anton, Bebas Neue, Arial, sans-serif" font-size="32" font-weight="900" text-anchor="middle" letter-spacing="2px">BREAKING NEWS</text>
 
         <!-- Title Text Lines - Center aligned with design-specific styling -->
         ${titleLines.map((line, index) => {
@@ -3379,7 +3379,7 @@ const tagalogQuotes = [
           const estimatedTextWidth = websiteText.length * selectedDesign.websiteSize * 0.6;
           const lineY = Math.round(websiteY);
           const lineThickness = 3; // Thickness of the lines
-          const gapFromText = 20; // Gap between line and text
+          const gapFromText = 10; // Gap between line and text (reduced for tighter spacing)
           const borderInset = 10; // Match the border inset
           
           // Calculate positions - lines stretch from border to border

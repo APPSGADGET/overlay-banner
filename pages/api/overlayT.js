@@ -2220,6 +2220,68 @@ const tagalogQuotes = [
       websiteColorOverride = colorMap[normalizedColor] || wcParam.trim();
     }
     
+    // Parse vertical line color parameter (vlc)
+    const vlcParam = rawParams.vlc || '';
+    let verticalLineColor = '';
+    if (vlcParam) {
+      const colorMap = {
+        'gold': '#FFD700',
+        'orange': '#FF8C00',
+        'cyan': '#00FFFF',
+        'electricblue': '#1E90FF',
+        'electric-blue': '#1E90FF',
+        'softyellow': '#F4E04D',
+        'soft-yellow': '#F4E04D',
+        'lavender': '#C084FC',
+        'limegreen': '#00FF4C',
+        'lime-green': '#00FF4C',
+        'red': '#FF0000',
+        'royalblue': '#003CFF',
+        'royal-blue': '#003CFF',
+        'magenta': '#FF00C8',
+        'vibrantyellow': '#FFEA00',
+        'vibrant-yellow': '#FFEA00',
+        'gray': '#E0E0E0',
+        'grey': '#E0E0E0',
+        'silver': '#C0C0C0',
+        'white': '#FFFFFF'
+      };
+      
+      const normalizedColor = vlcParam.toLowerCase().replace(/\s+/g, '');
+      verticalLineColor = colorMap[normalizedColor] || vlcParam.trim();
+    }
+    
+    // Parse date color parameter (dc)
+    const dcParam = rawParams.dc || '';
+    let dateColor = '';
+    if (dcParam) {
+      const colorMap = {
+        'gold': '#FFD700',
+        'orange': '#FF8C00',
+        'cyan': '#00FFFF',
+        'electricblue': '#1E90FF',
+        'electric-blue': '#1E90FF',
+        'softyellow': '#F4E04D',
+        'soft-yellow': '#F4E04D',
+        'lavender': '#C084FC',
+        'limegreen': '#00FF4C',
+        'lime-green': '#00FF4C',
+        'red': '#FF0000',
+        'royalblue': '#003CFF',
+        'royal-blue': '#003CFF',
+        'magenta': '#FF00C8',
+        'vibrantyellow': '#FFEA00',
+        'vibrant-yellow': '#FFEA00',
+        'gray': '#E0E0E0',
+        'grey': '#E0E0E0',
+        'silver': '#C0C0C0',
+        'white': '#FFFFFF'
+      };
+      
+      const normalizedColor = dcParam.toLowerCase().replace(/\s+/g, '');
+      dateColor = colorMap[normalizedColor] || dcParam.trim();
+    }
+    
     // Check if we should use quote designs and generate random quotes
     // This will generate a NEW quote on every request/refresh when val parameter is present
     const isQuoteDesign = ['quote1', 'quote2', 'quote3'].includes(design);
@@ -3230,7 +3292,10 @@ const tagalogQuotes = [
         <circle cx="${Math.round(targetWidth / 2)}" cy="${Math.round(titleStartY + (titleLines.length * lineHeight / 2))}" r="200" class="radial-burst"/>
         ` : ''}
 
-        <!-- Title Text Lines - Center aligned with design-specific styling -->
+        <!-- Vertical line on left side of title -->
+        <line x1="${padding + 20}" y1="${Math.round(titleStartY - 10)}" x2="${padding + 20}" y2="${Math.round(titleStartY + (titleLines.length * lineHeight) - 10)}" stroke="${verticalLineColor || selectedDesign.titleColor}" stroke-width="4" stroke-linecap="round"/>
+        
+        <!-- Title Text Lines - Left aligned with design-specific styling -->
         ${titleLines.map((line, index) => {
           // Determine classes for bold designs
           const boldDesigns = ['boldblue', 'bold', 'energetic', 'popart', 'viral'];
@@ -3246,6 +3311,8 @@ const tagalogQuotes = [
             design === 'boldblue' ? 'boldblue-title' : '',
             isBoldDesign ? 'bold-text' : ''
           ].filter(Boolean).join(' ');
+          
+          const titleX = padding + 40; // 20px padding + 20px gap from vertical line
           
           // For bebas design with highlights enabled, parse and render with tspan
           if (design === 'bebas' && selectedDesign.enableHighlight) {
@@ -3271,10 +3338,10 @@ const tagalogQuotes = [
               // Anton font is more compatible than Bebas Neue on production environments
               return `<tspan class="${className}" font-family="Anton" font-style="normal" font-weight="400">${seg.text}</tspan>${space}`;
             }).join('');
-            return `<text x="${Math.round(targetWidth / 2)}" y="${Math.round(titleStartY + (index * lineHeight))}" class="${classes}">${tspanContent}</text>`;
+            return `<text x="${titleX}" y="${Math.round(titleStartY + (index * lineHeight))}" class="${classes}" text-anchor="start">${tspanContent}</text>`;
           }
           
-          return `<text x="${Math.round(targetWidth / 2)}" y="${Math.round(titleStartY + (index * lineHeight))}" class="${classes}">${line}</text>`;
+          return `<text x="${titleX}" y="${Math.round(titleStartY + (index * lineHeight))}" class="${classes}" text-anchor="start">${line}</text>`;
         }).join('')}
         
         ${design === 'anime' ? `
@@ -3292,41 +3359,22 @@ const tagalogQuotes = [
         <rect x="${padding}" y="${Math.round(titleEndY + 10)}" width="${contentWidth}" height="4" fill="${selectedDesign.websiteColor}"/>
         ` : ''}
         
-        <!-- Website Text with Social Media Icons - Dynamically positioned with design styling -->
+        <!-- Date (left) and Website Title (right) on same line -->
         ${website ? (() => {
-          // Calculate icon size based on website text size (larger, more visible)
-          const iconSize = selectedDesign.websiteSize * 1.1;
-          const iconSpacing = iconSize * 0.15; // Space between icons (tight grouping)
-          const textGap = iconSize * 4.0; // Very large gap between last icon and text to prevent overlap
+          // Get current date formatted as "Dec 16, 2025"
+          const now = new Date();
+          const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+          const dateString = `${months[now.getMonth()]} ${now.getDate()}, ${now.getFullYear()}`;
           
-          // Position icons and text more to the right
-          const iconGroupWidth = (iconSize * 3) + (iconSpacing * 2);
-          const iconStartX = Math.round(targetWidth * 0.35); // Start icons at 35% from left (more to the right)
-          const iconY = Math.round(websiteY - (iconSize / 2));
-          const textX = iconStartX + iconGroupWidth + textGap; // Text starts well after icons
+          const dateX = padding + 40; // Left aligned, matching title position
+          const websiteX = targetWidth - padding - 40; // Right aligned
           
           return `
-        <!-- Social Media Icons -->
-        <!-- Instagram Icon -->
-        <g transform="translate(${iconStartX}, ${iconY})">
-          <rect width="${iconSize}" height="${iconSize}" rx="${iconSize * 0.22}" fill="white"/>
-          <circle cx="${iconSize/2}" cy="${iconSize/2}" r="${iconSize * 0.22}" fill="none" stroke="black" stroke-width="${iconSize * 0.09}"/>
-          <circle cx="${iconSize * 0.72}" cy="${iconSize * 0.28}" r="${iconSize * 0.08}" fill="black"/>
-        </g>
+        <!-- Date text (left aligned) -->
+        <text x="${dateX}" y="${Math.round(websiteY)}" class="website-text ${design === 'pokemon' ? 'pokemon-website' : ''} ${design === 'bold' ? 'bold-website' : ''} ${design === 'boldblue' ? 'boldblue-website' : ''} ${['boldblue', 'bold', 'energetic', 'popart', 'viral'].includes(design) ? 'bold-text' : ''}" text-anchor="start" ${dateColor ? `fill="${dateColor}"` : ''}>${dateString}</text>
         
-        <!-- Facebook Icon -->
-        <g transform="translate(${iconStartX + iconSize + iconSpacing}, ${iconY})">
-          <rect width="${iconSize}" height="${iconSize}" rx="${iconSize * 0.12}" fill="white"/>
-          <path d="M ${iconSize * 0.55} ${iconSize * 0.4} L ${iconSize * 0.55} ${iconSize * 0.25} C ${iconSize * 0.55} ${iconSize * 0.18} ${iconSize * 0.6} ${iconSize * 0.15} ${iconSize * 0.67} ${iconSize * 0.15} L ${iconSize * 0.72} ${iconSize * 0.15} L ${iconSize * 0.72} ${iconSize * 0.28} L ${iconSize * 0.67} ${iconSize * 0.28} C ${iconSize * 0.64} ${iconSize * 0.28} ${iconSize * 0.62} ${iconSize * 0.3} ${iconSize * 0.62} ${iconSize * 0.33} L ${iconSize * 0.62} ${iconSize * 0.4} L ${iconSize * 0.72} ${iconSize * 0.4} L ${iconSize * 0.7} ${iconSize * 0.52} L ${iconSize * 0.62} ${iconSize * 0.52} L ${iconSize * 0.62} ${iconSize * 0.85} L ${iconSize * 0.48} ${iconSize * 0.85} L ${iconSize * 0.48} ${iconSize * 0.52} L ${iconSize * 0.38} ${iconSize * 0.52} L ${iconSize * 0.38} ${iconSize * 0.4} L ${iconSize * 0.55} ${iconSize * 0.4}" fill="black"/>
-        </g>
-        
-        <!-- X (Twitter) Icon -->
-        <g transform="translate(${iconStartX + (iconSize + iconSpacing) * 2}, ${iconY})">
-          <rect width="${iconSize}" height="${iconSize}" rx="${iconSize * 0.12}" fill="white"/>
-          <path d="M ${iconSize * 0.68} ${iconSize * 0.22} L ${iconSize * 0.56} ${iconSize * 0.38} L ${iconSize * 0.68} ${iconSize * 0.78} L ${iconSize * 0.58} ${iconSize * 0.78} L ${iconSize * 0.5} ${iconSize * 0.5} L ${iconSize * 0.42} ${iconSize * 0.78} L ${iconSize * 0.32} ${iconSize * 0.78} L ${iconSize * 0.44} ${iconSize * 0.38} L ${iconSize * 0.32} ${iconSize * 0.22} L ${iconSize * 0.42} ${iconSize * 0.22} L ${iconSize * 0.5} ${iconSize * 0.35} L ${iconSize * 0.58} ${iconSize * 0.22} L ${iconSize * 0.68} ${iconSize * 0.22}" fill="black" stroke="black" stroke-width="${iconSize * 0.02}" stroke-linejoin="miter"/>
-        </g>
-        
-        <text x="${textX}" y="${Math.round(websiteY)}" class="website-text ${design === 'pokemon' ? 'pokemon-website' : ''} ${design === 'bold' ? 'bold-website' : ''} ${design === 'boldblue' ? 'boldblue-website' : ''} ${['boldblue', 'bold', 'energetic', 'popart', 'viral'].includes(design) ? 'bold-text' : ''}" text-anchor="start">${websiteText}</text>
+        <!-- Website title (right aligned) -->
+        <text x="${websiteX}" y="${Math.round(websiteY)}" class="website-text ${design === 'pokemon' ? 'pokemon-website' : ''} ${design === 'bold' ? 'bold-website' : ''} ${design === 'boldblue' ? 'boldblue-website' : ''} ${['boldblue', 'bold', 'energetic', 'popart', 'viral'].includes(design) ? 'bold-text' : ''}" text-anchor="end">${websiteText}</text>
         `;
         })() : ''}
         
