@@ -3109,7 +3109,7 @@ const tagalogQuotes = [
             font-weight: ${selectedDesign.fontWeight || '700'};
             font-style: normal;
             fill: ${selectedDesign.titleColor}; 
-            text-anchor: middle;
+            text-anchor: start;
             dominant-baseline: middle;
             word-spacing: normal;
             letter-spacing: ${design === 'tech' ? '2px' : '1px'};
@@ -3293,7 +3293,7 @@ const tagalogQuotes = [
         ` : ''}
 
         <!-- Vertical line on left side of title -->
-        <line x1="${padding + 20}" y1="${Math.round(titleStartY - 10)}" x2="${padding + 20}" y2="${Math.round(titleStartY + (titleLines.length * lineHeight) - 10)}" stroke="${verticalLineColor || selectedDesign.titleColor}" stroke-width="4" stroke-linecap="round"/>
+        <line x1="${padding + 20}" y1="${Math.round(titleStartY - 50)}" x2="${padding + 20}" y2="${Math.round(titleStartY + (titleLines.length * lineHeight) - 10)}" stroke="${verticalLineColor || selectedDesign.titleColor}" stroke-width="4" stroke-linecap="round"/>
         
         <!-- Title Text Lines - Left aligned with design-specific styling -->
         ${titleLines.map((line, index) => {
@@ -3312,7 +3312,7 @@ const tagalogQuotes = [
             isBoldDesign ? 'bold-text' : ''
           ].filter(Boolean).join(' ');
           
-          const titleX = padding + 40; // 20px padding + 20px gap from vertical line
+          const titleX = padding + 30; // 20px padding + 10px gap from vertical line
           
           // For bebas design with highlights enabled, parse and render with tspan
           if (design === 'bebas' && selectedDesign.enableHighlight) {
@@ -3366,8 +3366,8 @@ const tagalogQuotes = [
           const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
           const dateString = `${months[now.getMonth()]} ${now.getDate()}, ${now.getFullYear()}`;
           
-          const dateX = padding + 40; // Left aligned, matching title position
-          const websiteX = targetWidth - padding - 40; // Right aligned
+          const dateX = padding + 150; // Moved further to the right
+          const websiteX = targetWidth - padding - 150; // Moved further to the left
           
           return `
         <!-- Date text (left aligned) -->
