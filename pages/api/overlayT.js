@@ -2908,8 +2908,9 @@ const tagalogQuotes = [
       return lines;
     }
     
-    // Wrap the title text using design-specific font size
-    const titleLines = wrapText(titleText, contentWidth, selectedDesign.titleSize);
+    // Wrap the title text using design-specific font size with extra right padding
+    const titleContentWidth = contentWidth - 100; // Add 100px padding on the right side for title
+    const titleLines = wrapText(titleText, titleContentWidth, selectedDesign.titleSize);
     const lineHeight = Math.round(selectedDesign.titleSize + 8); // Dynamic line spacing based on font size (ensure integer)
     const totalTitleHeight = Math.round(titleLines.length * lineHeight);
     
