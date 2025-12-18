@@ -1,0 +1,16 @@
+# Sample Logo Placeholder
+
+To use logos, place your PNG, JPG, or other image files in this folder.
+
+For testing purposes, you can create a simple logo using any image editor and save it as `logo.png` in this directory.
+
+Example filenames:
+- logo.png
+- company-logo.png
+- brand.png
+- watermark.png
+
+Then use them in your API calls:
+```
+?logo=logo.png&logoPos=upper-right
+```

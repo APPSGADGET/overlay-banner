@@ -2303,6 +2303,55 @@ const tagalogQuotes = [
     const sbParam = rawParams.sb || 'true';
     const showBorder = sbParam !== 'false' && sbParam !== '0' && sbParam !== 'no';
     
+    // Parse logo parameters
+    const logoParam = rawParams.logo || ''; // Logo filename from resources folder
+    const logoPosParam = rawParams.logoPos || 'upper-left'; // Position: upper-left, upper-middle, upper-right
+    let logoBase64 = '';
+    let logoWidth = 0;
+    let logoHeight = 0;
+    
+    // Load logo if specified
+    if (logoParam) {
+      try {
+        const logoPath = path.join(process.cwd(), 'public', 'resources', logoParam);
+        console.log('🖼️ Loading logo from:', logoPath);
+        
+        if (fs.existsSync(logoPath)) {
+          const logoBuffer = fs.readFileSync(logoPath);
+          
+          // Get logo dimensions using Sharp
+          const logoMetadata = await sharp(logoBuffer).metadata();
+          const originalLogoWidth = logoMetadata.width;
+          const originalLogoHeight = logoMetadata.height;
+          
+          // Calculate appropriate logo size for Facebook image headline post
+          // Facebook recommended image size: 1200x628
+          // Logo should be about 8-10% of width for good visibility
+          const maxLogoWidth = Math.round(parseInt(w) * 0.09); // 9% of image width
+          const aspectRatio = originalLogoWidth / originalLogoHeight;
+          
+          logoWidth = maxLogoWidth;
+          logoHeight = Math.round(maxLogoWidth / aspectRatio);
+          
+          // Resize logo to appropriate size
+          const resizedLogoBuffer = await sharp(logoBuffer)
+            .resize(logoWidth, logoHeight, {
+              fit: 'contain',
+              background: { r: 0, g: 0, b: 0, alpha: 0 }
+            })
+            .png()
+            .toBuffer();
+          
+          logoBase64 = `data:image/png;base64,${resizedLogoBuffer.toString('base64')}`;
+          console.log(`✅ Logo loaded: ${logoParam} (${originalLogoWidth}x${originalLogoHeight} → ${logoWidth}x${logoHeight})`);
+        } else {
+          console.log(`⚠️ Logo file not found: ${logoPath}`);
+        }
+      } catch (error) {
+        console.log(`❌ Error loading logo:`, error.message);
+      }
+    }
+    
     // Check if we should use quote designs and generate random quotes
     // This will generate a NEW quote on every request/refresh when val parameter is present
     const isQuoteDesign = ['quote1', 'quote2', 'quote3'].includes(design);
