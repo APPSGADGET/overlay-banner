@@ -187,8 +187,8 @@ const DESIGN_THEMES = {
     titleColor: '#FFFFFF',
     websiteColor: '#FFB347',
     gradientColors: ['rgba(230,81,0,0.95)', 'rgba(230,81,0,0.98)'], // Burnt Orange
-    titleSize: 78,
-    websiteSize: 32,
+    titleSize: 70,
+    websiteSize: 30,
     fontWeight: '900',
     fontFamily: 'Anton'
   },
@@ -197,8 +197,8 @@ const DESIGN_THEMES = {
     titleColor: '#FFFFFF',
     websiteColor: '#FFFFFF',
     gradientColors: ['rgba(0,0,0,0.95)', 'rgba(0,0,0,0.98)'], // Pure Black
-    titleSize: 78,
-    websiteSize: 32,
+    titleSize: 70,
+    websiteSize: 30,
     fontWeight: '900',
     fontFamily: 'Anton'
   },
@@ -254,8 +254,8 @@ const DESIGN_THEMES = {
          'rgba(0,0,0,1.0)',      // 90%: Solid black - title coverage begins
       'rgba(0,0,0,1.0)'       // 100%: Bottom - Rich dark black for maximum readability
     ], // Cinematic gradient with precise 10% increments from transparent top to solid dark bottom
-    titleSize: 78,
-    websiteSize: 32,
+    titleSize: 70,
+    websiteSize: 30,
     fontWeight: '900',
     fontFamily: 'Anton'
   },
@@ -305,8 +305,8 @@ const DESIGN_THEMES = {
       'rgba(0,0,0,1.0)',
       'rgba(0,0,0,1.0)'       // 100%: Bottom - Rich dark black for maximum readability
     ], // Cinematic gradient with precise increments from transparent top to solid dark bottom
-    titleSize: 78,
-    websiteSize: 32,
+    titleSize: 70,
+    websiteSize: 30,
     fontWeight: '900',
     fontFamily: 'Anton',
     enableHighlight: true // Enable keyword highlighting
@@ -316,8 +316,8 @@ const DESIGN_THEMES = {
     titleColor: '#FFFFFF',
     websiteColor: '#FFD700', // Golden Yellow
     gradientColors: [], // No gradient - fully transparent
-    titleSize: 78,
-    websiteSize: 32,
+    titleSize: 70,
+    websiteSize: 30,
     fontWeight: '900',
     fontFamily: 'Anton',
     transparent: true // Flag to output PNG with alpha channel
@@ -327,8 +327,8 @@ const DESIGN_THEMES = {
     titleColor: '#FFFFFF',
     websiteColor: '#FFB347', // Same as entertainment
     gradientColors: ['rgba(255,255,255,0.95)', 'rgba(255,255,255,0.98)'], // White
-    titleSize: 78,
-    websiteSize: 32,
+    titleSize: 70,
+    websiteSize: 30,
     fontWeight: '900',
     fontFamily: 'Anton'
   },
@@ -337,8 +337,8 @@ const DESIGN_THEMES = {
     titleColor: '#000000', // Black
     websiteColor: '#000000', // Black
     gradientColors: ['rgba(255,255,255,0.95)', 'rgba(255,255,255,0.98)'], // White
-    titleSize: 78,
-    websiteSize: 32,
+    titleSize: 70,
+    websiteSize: 30,
     fontWeight: '900',
     fontFamily: 'Anton'
   },
@@ -387,8 +387,8 @@ const DESIGN_THEMES = {
       'rgba(0,0,0,1.0)',
       'rgba(0,0,0,1.0)'
     ],
-    titleSize: 72,
-    websiteSize: 30,
+    titleSize: 64,
+    websiteSize: 28,
     fontWeight: '900',
     fontFamily: 'Montserrat'
   },
@@ -3030,7 +3030,7 @@ const tagalogQuotes = [
     const totalTitleHeight = Math.round(titleLines.length * lineHeight);
     
     // Dynamic positioning to prevent overlap
-    const topMargin = 20; // Top margin
+    const topMargin = 60; // Top margin - increased to prevent clipping
     const gapBetweenTitleAndWebsite = website ? 25 : 0; // No gap if no website
     const websiteTextSize = website ? selectedDesign.websiteSize : 0; // No size if no website
     
@@ -3047,7 +3047,7 @@ const tagalogQuotes = [
       svgHeight = targetHeight; // Use full image height for quote overlay
     } else {
       // Default positioning - text at bottom
-      titleStartY = Math.round(topMargin + (lineHeight * 0.8)); // Start from top with margin
+      titleStartY = Math.round(topMargin + lineHeight); // Start from top with margin
       
       // Calculate website position based on where title ends (ensure integers)
       titleEndY = Math.round(titleStartY + totalTitleHeight);
