@@ -3227,7 +3227,7 @@ const tagalogQuotes = [
           ${fontBase64Cache.notoBold || fontBase64Cache.notoRegular ? fontFaceDeclarations : ''}
           
           .title-text { 
-            font-family: "Montserrat", "${selectedDesign.fontFamily || 'Montserrat'}", "Bebas Neue", "Anton", "Noto Sans Bold", "Inter Bold", "Noto Sans", "Inter", Arial, sans-serif; 
+            font-family: "Montserrat", Arial, sans-serif; 
             font-size: ${selectedDesign.titleSize}px; 
             font-weight: 900;
             font-style: normal;
@@ -3256,7 +3256,7 @@ const tagalogQuotes = [
               const rgb = hexToRgb(color);
               return `
           .highlight-${idx} {
-            font-family: "Montserrat", "${selectedDesign.fontFamily || 'Montserrat'}", "Bebas Neue", "Anton", "Noto Sans Bold", "Inter Bold", Arial, sans-serif;
+            font-family: "Montserrat", Arial, sans-serif;
             font-weight: 900;
             fill: ${color};
             filter: drop-shadow(0 0 8px rgba(${rgb.r},${rgb.g},${rgb.b},0.6));
@@ -3265,7 +3265,7 @@ const tagalogQuotes = [
           })()}
           
           .website-text { 
-            font-family: "Montserrat", "${selectedDesign.fontFamily || 'Montserrat'}", "Bebas Neue", "Anton", "Noto Sans Bold", "Inter Bold", "Noto Sans", "Inter", Arial, sans-serif; 
+            font-family: "Montserrat", Arial, sans-serif; 
             font-size: ${selectedDesign.websiteSize}px; 
             font-weight: 900;
             font-style: normal;
@@ -3276,7 +3276,7 @@ const tagalogQuotes = [
             text-transform: uppercase;
           }
           .bold-text {
-            font-family: "Montserrat", "Noto Sans Bold", "Inter Bold", "Noto Sans", "Inter", Arial, sans-serif;
+            font-family: "Montserrat", Arial, sans-serif;
             font-weight: 900;
             font-style: normal;
             stroke: rgba(0,0,0,0.3);
@@ -3286,8 +3286,8 @@ const tagalogQuotes = [
           }
           ${design === 'boldblue' ? `
           .boldblue-title {
-            font-family: "Noto Sans", "Inter", Arial, sans-serif;
-            font-weight: 700;
+            font-family: "Montserrat", Arial, sans-serif;
+            font-weight: 900;
             stroke: rgba(0,0,0,0.4);
             stroke-width: 2px;
             paint-order: stroke fill;
@@ -3295,8 +3295,8 @@ const tagalogQuotes = [
             letter-spacing: 1px;
           }
           .boldblue-website {
-            font-family: "Noto Sans", "Inter", Arial, sans-serif;
-            font-weight: 700;
+            font-family: "Montserrat", Arial, sans-serif;
+            font-weight: 900;
             letter-spacing: 2px;
             stroke: rgba(0,0,0,0.2);
             stroke-width: 1px;
@@ -3311,7 +3311,7 @@ const tagalogQuotes = [
           }` : ''}
           ${design === 'breaking' ? `
           .breaking-tag {
-            font-family: "Noto Sans Bold", "Inter Bold", sans-serif;
+            font-family: "Montserrat", Arial, sans-serif;
             font-size: 18px;
             font-weight: 900;
             fill: #FFFFFF;
@@ -3365,8 +3365,8 @@ const tagalogQuotes = [
           }` : ''}
           ${design === 'bold' ? `
           .bold-title {
-            font-family: "Noto Sans", "Inter", Arial, sans-serif;
-            font-weight: 700;
+            font-family: "Montserrat", Arial, sans-serif;
+            font-weight: 900;
             stroke: rgba(0,0,0,0.4);
             stroke-width: 2px;
             paint-order: stroke fill;
@@ -3374,8 +3374,8 @@ const tagalogQuotes = [
             letter-spacing: 1px;
           }
           .bold-website {
-            font-family: "Noto Sans", "Inter", Arial, sans-serif;
-            font-weight: 700;
+            font-family: "Montserrat", Arial, sans-serif;
+            font-weight: 900;
             letter-spacing: 3px;
           }
           .bold-vignette {
@@ -3385,9 +3385,9 @@ const tagalogQuotes = [
           
           /* Critical: Force font-family on tspan elements for Sharp/librsvg compatibility on Linux */
           tspan {
-            font-family: "${selectedDesign.fontFamily || 'Bebas Neue'}", "Bebas Neue", "Anton", Arial, sans-serif;
+            font-family: "Montserrat", Arial, sans-serif;
             font-style: normal;
-            font-weight: ${selectedDesign.fontWeight || '400'};
+            font-weight: 900;
           }
         </style>
         
@@ -3451,10 +3451,10 @@ const tagalogQuotes = [
                 className = `highlight-${seg.colorIndex}`;
               }
               const space = seg.isLastWord ? '' : ' ';
-              // CRITICAL FIX: Add explicit font-family="Anton" to every tspan
+              // CRITICAL FIX: Add explicit font-family="Montserrat" to every tspan
               // This ensures Sharp/librsvg on Linux (Vercel) renders the correct embedded font
-              // Anton font is more compatible than Bebas Neue on production environments
-              return `<tspan class="${className}" font-family="Anton" font-style="normal" font-weight="400">${seg.text}</tspan>${space}`;
+              // Montserrat Black font with weight 900 for consistent bold rendering
+              return `<tspan class="${className}" font-family="Montserrat" font-style="normal" font-weight="900">${seg.text}</tspan>${space}`;
             }).join('');
             return `<text x="${Math.round(targetWidth / 2)}" y="${Math.round(titleStartY + (index * lineHeight))}" class="${classes}">${tspanContent}</text>`;
           }
