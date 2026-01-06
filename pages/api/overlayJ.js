@@ -187,7 +187,7 @@ const DESIGN_THEMES = {
     titleColor: '#FFFFFF',
     websiteColor: '#FFB347',
     gradientColors: ['rgba(230,81,0,0.95)', 'rgba(230,81,0,0.98)'], // Burnt Orange
-    titleSize: 62,
+    titleSize: 54,
     websiteSize: 30,
     fontWeight: '900',
     fontFamily: 'Anton'
@@ -197,7 +197,7 @@ const DESIGN_THEMES = {
     titleColor: '#FFFFFF',
     websiteColor: '#FFFFFF',
     gradientColors: ['rgba(0,0,0,0.95)', 'rgba(0,0,0,0.98)'], // Pure Black
-    titleSize: 62,
+    titleSize: 54,
     websiteSize: 30,
     fontWeight: '900',
     fontFamily: 'Anton'
@@ -254,7 +254,7 @@ const DESIGN_THEMES = {
          'rgba(0,0,0,1.0)',      // 90%: Solid black - title coverage begins
       'rgba(0,0,0,1.0)'       // 100%: Bottom - Rich dark black for maximum readability
     ], // Cinematic gradient with precise 10% increments from transparent top to solid dark bottom
-    titleSize: 62,
+    titleSize: 54,
     websiteSize: 30,
     fontWeight: '900',
     fontFamily: 'Anton'
@@ -305,7 +305,7 @@ const DESIGN_THEMES = {
       'rgba(0,0,0,1.0)',
       'rgba(0,0,0,1.0)'       // 100%: Bottom - Rich dark black for maximum readability
     ], // Cinematic gradient with precise increments from transparent top to solid dark bottom
-    titleSize: 62,
+    titleSize: 54,
     websiteSize: 30,
     fontWeight: '900',
     fontFamily: 'Anton',
@@ -316,7 +316,7 @@ const DESIGN_THEMES = {
     titleColor: '#FFFFFF',
     websiteColor: '#FFD700', // Golden Yellow
     gradientColors: [], // No gradient - fully transparent
-    titleSize: 62,
+    titleSize: 54,
     websiteSize: 30,
     fontWeight: '900',
     fontFamily: 'Anton',
@@ -327,7 +327,7 @@ const DESIGN_THEMES = {
     titleColor: '#FFFFFF',
     websiteColor: '#FFB347', // Same as entertainment
     gradientColors: ['rgba(255,255,255,0.95)', 'rgba(255,255,255,0.98)'], // White
-    titleSize: 62,
+    titleSize: 54,
     websiteSize: 30,
     fontWeight: '900',
     fontFamily: 'Anton'
@@ -337,7 +337,7 @@ const DESIGN_THEMES = {
     titleColor: '#000000', // Black
     websiteColor: '#000000', // Black
     gradientColors: ['rgba(255,255,255,0.95)', 'rgba(255,255,255,0.98)'], // White
-    titleSize: 62,
+    titleSize: 54,
     websiteSize: 30,
     fontWeight: '900',
     fontFamily: 'Anton'
@@ -387,7 +387,7 @@ const DESIGN_THEMES = {
       'rgba(0,0,0,1.0)',
       'rgba(0,0,0,1.0)'
     ],
-    titleSize: 58,
+    titleSize: 54,
     websiteSize: 28,
     fontWeight: '900',
     fontFamily: 'Montserrat'
@@ -2618,7 +2618,7 @@ const tagalogQuotes = [
     console.log('  Processed website:', websiteText);
     
     // Create SVG with proper UTF-8 encoding and font references
-    const padding = (design === 'entertainment' || design === 'antonBlack' || design === 'antonBlack1' || design === 'antonTransparent' || design === 'antonTransparent2' || design === 'antonWhite' || design === 'bebas' || design === 'montserrat') ? 40 : (design === 'cinematic' || design === 'vintage') ? 30 : 80; // Increased padding for entertainment, antonBlack, antonBlack1, antonTransparent, antonTransparent2, antonWhite, bebas, and montserrat to prevent clipping
+    const padding = (design === 'entertainment' || design === 'antonBlack' || design === 'antonBlack1' || design === 'antonTransparent' || design === 'antonTransparent2' || design === 'antonWhite' || design === 'bebas' || design === 'montserrat') ? 80 : (design === 'cinematic' || design === 'vintage') ? 30 : 80; // Increased padding for entertainment, antonBlack, antonBlack1, antonTransparent, antonTransparent2, antonWhite, bebas, and montserrat to prevent clipping
     const contentWidth = targetWidth - (padding * 2); // Available width for text
     
     // Function to detect emphasis keywords and create highlight segments with multi-color support
@@ -2996,7 +2996,7 @@ const tagalogQuotes = [
       
       // More accurate character width estimation for Noto Sans
       // For entertainment, antonBlack, antonTransparent, antonTransparent2, antonWhite, and bebas designs, use narrower char width for better spreading
-      const avgCharWidth = (design === 'entertainment' || design === 'antonBlack' || design === 'antonBlack1' || design === 'antonTransparent' || design === 'antonTransparent2' || design === 'antonWhite' || design === 'bebas') ? fontSize * 0.45 : fontSize * 0.55;
+      const avgCharWidth = (design === 'entertainment' || design === 'antonBlack' || design === 'antonBlack1' || design === 'antonTransparent' || design === 'antonTransparent2' || design === 'antonWhite' || design === 'bebas' || design === 'montserrat') ? fontSize * 0.65 : fontSize * 0.55;
       const maxCharsPerLine = Math.floor(maxWidth / avgCharWidth);
       
       // NO maximum lines limit - accept all text
@@ -3030,7 +3030,7 @@ const tagalogQuotes = [
     const totalTitleHeight = Math.round(titleLines.length * lineHeight);
     
     // Dynamic positioning to prevent overlap
-    const topMargin = 60; // Top margin - increased to prevent clipping
+    const topMargin = 90; // Top margin - increased to prevent clipping
     const gapBetweenTitleAndWebsite = website ? 25 : 0; // No gap if no website
     const websiteTextSize = website ? selectedDesign.websiteSize : 0; // No size if no website
     
