@@ -275,6 +275,7 @@ export default async function handler(req, res) {
             dominant-baseline: middle;
             word-spacing: normal;
             letter-spacing: 2px;
+            filter: drop-shadow(7px 6px 14px #000000);
           }
           .website-text { 
             font-family: "Noto Sans", "Inter", sans-serif; 

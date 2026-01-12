@@ -3098,6 +3098,7 @@ const tagalogQuotes = [
             dominant-baseline: middle;
             word-spacing: normal;
             letter-spacing: ${design === 'tech' ? '2px' : '1px'};
+            filter: drop-shadow(7px 6px 14px #000000);
             ${design === 'tech' ? 'filter: url(#glow);' : ''}
           }
           

@@ -2355,6 +2355,40 @@ const tagalogQuotes = [
     const sbParam = rawParams.sb || 'false';
     const showBorder = sbParam === 'true' || sbParam === '1' || sbParam === 'yes';
     
+    // Parse breaking news label parameter (bn) - false by default, set to true or 1 to show
+    const bnParam = rawParams.bn || 'false';
+    const showBreakingNews = bnParam === 'true' || bnParam === '1' || bnParam === 'yes';
+    
+    // Parse breaking news text parameter (bntext) - defaults to "BREAKING NEWS"
+    const breakingNewsText = rawParams.bntext ? rawParams.bntext.toUpperCase() : 'BREAKING NEWS';
+    
+    // Parse breaking news background color parameter (bnbg) - defaults to red
+    const bnBgColorParam = rawParams.bnbg || '';
+    let bnBgColor = '#FF0000'; // Default to red
+    if (bnBgColorParam) {
+      // Color name mapping for breaking news background
+      const colorMap = {
+        'red': '#FF0000',
+        'darkred': '#8B0000',
+        'orange': '#FF8C00',
+        'darkorange': '#FF4500',
+        'yellow': '#FFD700',
+        'gold': '#FFD700',
+        'green': '#00AA00',
+        'darkgreen': '#006400',
+        'blue': '#0066FF',
+        'darkblue': '#00008B',
+        'purple': '#9B30FF',
+        'darkpurple': '#6A0DAD',
+        'black': '#000000',
+        'gray': '#808080',
+        'darkgray': '#404040'
+      };
+      
+      const normalizedColor = bnBgColorParam.toLowerCase().replace(/\s+/g, '');
+      bnBgColor = colorMap[normalizedColor] || bnBgColorParam.trim();
+    }
+    
     // Parse logo parameters
     const logoParam = rawParams.logo || ''; // Logo filename from resources folder
     const logoPosParam = rawParams.logoPos || 'upper-left'; // Position: upper-left, upper-middle, upper-right
@@ -3236,6 +3270,7 @@ const tagalogQuotes = [
             dominant-baseline: middle;
             word-spacing: normal;
             letter-spacing: ${design === 'tech' ? '2px' : '1px'};
+            filter: drop-shadow(7px 6px 14px #000000);
             ${design === 'tech' ? 'filter: url(#glow);' : ''}
           }
           
@@ -3320,6 +3355,18 @@ const tagalogQuotes = [
           .breaking-bg {
             fill: #FF0000;
           }` : ''}
+          ${showBreakingNews ? `
+          .breaking-news-label {
+            font-family: "Anton", Arial, sans-serif;
+            font-size: 28px;
+            font-weight: 900;
+            fill: #FFFFFF;
+            text-anchor: start;
+            letter-spacing: 2px;
+          }
+          .breaking-news-bg {
+            fill: ${bnBgColor};
+          }` : ''}
           ${design === 'thoughtful' ? `
           .divider-line {
             stroke: ${selectedDesign.websiteColor};
@@ -3402,6 +3449,12 @@ const tagalogQuotes = [
         <!-- Breaking News Tag (above title) -->
         <rect x="${Math.round(targetWidth / 2 - 60)}" y="${Math.round(titleStartY - 80)}" width="120" height="30" rx="4" class="breaking-bg"/>
         <text x="${Math.round(targetWidth / 2)}" y="${Math.round(titleStartY - 60)}" class="breaking-tag">BREAKING</text>
+        ` : ''}
+        
+        ${showBreakingNews ? `
+        <!-- Breaking News Label (top left of title) -->
+        <rect x="${padding}" y="${Math.round(titleStartY - 90)}" width="${Math.round(breakingNewsText.length * 26)}" height="45" class="breaking-news-bg"/>
+        <text x="${padding + 15}" y="${Math.round(titleStartY - 60)}" class="breaking-news-label">${escapeXml(breakingNewsText)}</text>
         ` : ''}
         
         ${design === 'cinematic' ? `
@@ -3550,6 +3603,41 @@ const tagalogQuotes = [
           blend: 'over'
         }
       ];
+      
+      // Add logo layer at the top of the image if logo is provided
+      if (logoBase64) {
+        // Extract the base64 data and convert to buffer
+        const base64Data = logoBase64.replace(/^data:image\/\w+;base64,/, '');
+        const logoImageBuffer = Buffer.from(base64Data, 'base64');
+        
+        // Calculate logo X position based on logoPos parameter with padding
+        const logoPadding = 30; // Padding from edges
+        const logoX = logoPosParam === 'upper-middle' 
+          ? Math.round((targetWidth - logoWidth) / 2) 
+          : logoPosParam === 'upper-right' 
+            ? Math.round(targetWidth - logoWidth - logoPadding) 
+            : logoPadding;
+        
+        // Create circular mask for the logo
+        const circleMaskSvg = `<svg width="${logoWidth}" height="${logoHeight}" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="${logoWidth / 2}" cy="${logoHeight / 2}" r="${Math.min(logoWidth, logoHeight) / 2}" fill="white"/>
+        </svg>`;
+        
+        // Composite logo with circular mask at the top of the image
+        compositeLayers.push({
+          input: await sharp(logoImageBuffer)
+            .resize(logoWidth, logoHeight, { fit: 'cover' })
+            .composite([{
+              input: Buffer.from(circleMaskSvg),
+              blend: 'dest-in'
+            }])
+            .png()
+            .toBuffer(),
+          left: logoX,
+          top: logoPadding,
+          blend: 'over'
+        });
+      }
       
       // Add border layer only if showBorder is true
       if (showBorder) {
