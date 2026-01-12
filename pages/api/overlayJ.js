@@ -3453,7 +3453,7 @@ const tagalogQuotes = [
         
         ${showBreakingNews ? `
         <!-- Breaking News Label (top left of title) -->
-        <rect x="${padding}" y="${Math.round(titleStartY - 90)}" width="${Math.round(breakingNewsText.length * 26)}" height="45" class="breaking-news-bg"/>
+        <rect x="${padding}" y="${Math.round(titleStartY - 90)}" width="${Math.round(breakingNewsText.length * 13)}" height="45" class="breaking-news-bg"/>
         <text x="${padding + 15}" y="${Math.round(titleStartY - 60)}" class="breaking-news-label">${escapeXml(breakingNewsText)}</text>
         ` : ''}
         
