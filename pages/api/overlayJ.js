@@ -2389,6 +2389,14 @@ const tagalogQuotes = [
       bnBgColor = colorMap[normalizedColor] || bnBgColorParam.trim();
     }
     
+    // Parse breaking news width multiplier parameter (bnwidth) - defaults to 13 pixels per character
+    const bnWidthParam = rawParams.bnwidth || '13';
+    const bnWidthMultiplier = parseInt(bnWidthParam) || 13;
+    
+    // Parse breaking news height parameter (bnheight) - defaults to 45 pixels
+    const bnHeightParam = rawParams.bnheight || '45';
+    const bnHeight = parseInt(bnHeightParam) || 45;
+    
     // Parse logo parameters
     const logoParam = rawParams.logo || ''; // Logo filename from resources folder
     const logoPosParam = rawParams.logoPos || 'upper-left'; // Position: upper-left, upper-middle, upper-right
@@ -3453,7 +3461,7 @@ const tagalogQuotes = [
         
         ${showBreakingNews ? `
         <!-- Breaking News Label (top left of title) -->
-        <rect x="${padding}" y="${Math.round(titleStartY - 90)}" width="${Math.round(breakingNewsText.length * 13)}" height="45" class="breaking-news-bg"/>
+        <rect x="${padding}" y="${Math.round(titleStartY - 90)}" width="${Math.round(breakingNewsText.length * bnWidthMultiplier)}" height="${bnHeight}" class="breaking-news-bg"/>
         <text x="${padding + 15}" y="${Math.round(titleStartY - 60)}" class="breaking-news-label">${escapeXml(breakingNewsText)}</text>
         ` : ''}
         
