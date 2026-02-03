@@ -135,8 +135,38 @@ try {
   console.log('❌ Could not read fonts directory:', err.message);
 }
 
+// Function to extract YouTube video ID and convert to thumbnail URL
+function convertYouTubeToThumbnail(url) {
+  if (!url) return null;
+  
+  // Check if it's a YouTube URL
+  const youtubePatterns = [
+    /(?:youtube\.com\/embed\/|youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/,
+    /youtube\.com\/.*[?&]v=([a-zA-Z0-9_-]{11})/
+  ];
+  
+  for (const pattern of youtubePatterns) {
+    const match = url.match(pattern);
+    if (match && match[1]) {
+      const videoId = match[1];
+      console.log(`🎬 Detected YouTube video ID: ${videoId}`);
+      // Use maxresdefault for highest quality, fallback to hqdefault if needed
+      return `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
+    }
+  }
+  
+  return null;
+}
+
 function fetchImageBuffer(imageUrl) {
   return new Promise((resolve, reject) => {
+    // Check if it's a YouTube URL and convert to thumbnail
+    const thumbnailUrl = convertYouTubeToThumbnail(imageUrl);
+    if (thumbnailUrl) {
+      console.log(`🎬 Converting YouTube URL to thumbnail: ${thumbnailUrl}`);
+      imageUrl = thumbnailUrl;
+    }
+    
     const protocol = imageUrl.startsWith('https') ? https : http;
     
     protocol.get(imageUrl, (response) => {
