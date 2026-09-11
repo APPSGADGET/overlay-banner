@@ -739,7 +739,7 @@ export default async function handler(req, res) {
     let imageData = ''; // New parameter for base64 binary data
     let title = 'Sample Title';
     let website = '';
-    let design = 'default';
+    let design = 'bebas';
     let val = ''; // New parameter for random quote generation
     let watermark = ''; // Watermark text for preview images
     let w = '1080';
@@ -2220,8 +2220,8 @@ const tagalogQuotes = [
         }
       }
     }
-    if (design === 'default') {
-      design = rawParams.design || 'default';
+    if (design === 'bebas') {
+      design = rawParams.design || 'bebas';
     }
     if (imageData === '') {
       imageData = rawParams.imageData || '';
