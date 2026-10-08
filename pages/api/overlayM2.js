@@ -139,7 +139,11 @@ function fetchImageBuffer(imageUrl) {
   return new Promise((resolve, reject) => {
     const protocol = imageUrl.startsWith('https') ? https : http;
     
-    protocol.get(imageUrl, (response) => {
+    protocol.get(imageUrl, {
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36'
+      }
+    }, (response) => {
       if (response.statusCode === 302 || response.statusCode === 301) {
         console.log(`Redirecting to: ${response.headers.location}`);
         return fetchImageBuffer(response.headers.location).then(resolve).catch(reject);
