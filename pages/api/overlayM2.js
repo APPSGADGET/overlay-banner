@@ -162,6 +162,52 @@ function fetchImageBuffer(imageUrl) {
   });
 }
 
+function createBreakingNewsFallback(width, height) {
+  const backgroundSvg = `
+    <svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 1080 1350">
+      <defs>
+        <linearGradient id="base" x1="0" y1="0" x2="0.82" y2="1">
+          <stop offset="0" stop-color="#11161d" />
+          <stop offset="0.58" stop-color="#29232a" />
+          <stop offset="1" stop-color="#101318" />
+        </linearGradient>
+        <radialGradient id="flare" cx="78%" cy="28%" r="68%">
+          <stop offset="0" stop-color="#d32638" stop-opacity="0.72" />
+          <stop offset="1" stop-color="#d32638" stop-opacity="0" />
+        </radialGradient>
+        <linearGradient id="ribbon" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stop-color="#f23843" />
+          <stop offset="1" stop-color="#a90f24" />
+        </linearGradient>
+        <linearGradient id="lowerShade" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#101318" stop-opacity="0" />
+          <stop offset="1" stop-color="#101318" stop-opacity="0.9" />
+        </linearGradient>
+        <pattern id="dots" width="26" height="26" patternUnits="userSpaceOnUse">
+          <circle cx="3" cy="3" r="2" fill="#fff" fill-opacity="0.16" />
+        </pattern>
+      </defs>
+      <rect width="1080" height="1350" fill="url(#base)" />
+      <rect width="1080" height="1000" fill="url(#flare)" />
+      <path d="M760 0h320v690L760 1010l-95-185z" fill="url(#ribbon)" fill-opacity="0.82" />
+      <path d="M970 0h110v566L830 810l-55-106z" fill="#ff4a50" fill-opacity="0.55" />
+      <path d="M0 215 1080 0v118L0 354z" fill="#fff" fill-opacity="0.035" />
+      <path d="M0 770 1080 415v92L0 858z" fill="#e52b3b" fill-opacity="0.16" />
+      <rect x="0" y="180" width="1080" height="690" fill="url(#dots)" opacity="0.56" />
+      <circle cx="790" cy="440" r="230" fill="none" stroke="#fff" stroke-opacity="0.12" stroke-width="3" />
+      <circle cx="790" cy="440" r="180" fill="none" stroke="#ffcc57" stroke-opacity="0.28" stroke-width="2" />
+      <path d="M0 0h1080v12H0z" fill="#ffcc57" />
+      <rect x="54" y="58" width="454" height="92" rx="6" fill="url(#ribbon)" />
+      <path d="M54 144h454v6H54z" fill="#ffcc57" />
+      <circle cx="92" cy="104" r="10" fill="#fff" />
+      <text x="120" y="117" fill="#fff" font-family="Arial, sans-serif" font-size="38" font-weight="900">BREAKING NEWS</text>
+      <rect x="0" y="820" width="1080" height="530" fill="url(#lowerShade)" />
+      <path d="M0 1328h1080v22H0z" fill="#e3273a" />
+    </svg>`;
+
+  return sharp(Buffer.from(backgroundSvg)).jpeg({ quality: 90 }).toBuffer();
+}
+
 // Design configurations for different styles
 const DESIGN_THEMES = {
   'default': {
@@ -2479,16 +2525,20 @@ const tagalogQuotes = [
           console.log('✅ Image fetched:', imageBuffer.length, 'bytes');
         } catch (fetchError) {
           console.log('⚠️ Image fetch failed, creating default image:', fetchError.message);
-          // Create a default solid color image
-          imageBuffer = await sharp({
-            create: {
-              width: targetWidth,
-              height: targetHeight,
-              channels: 3,
-              background: { r: 70, g: 130, b: 180 } // Steel blue background
-            }
-          }).jpeg().toBuffer();
-          console.log('✅ Default image created:', imageBuffer.length, 'bytes');
+          if (['bebas', 'breaking'].includes(String(design).toLowerCase())) {
+            imageBuffer = await createBreakingNewsFallback(targetWidth, targetHeight);
+            console.log('✅ Breaking news fallback created:', imageBuffer.length, 'bytes');
+          } else {
+            imageBuffer = await sharp({
+              create: {
+                width: targetWidth,
+                height: targetHeight,
+                channels: 3,
+                background: { r: 70, g: 130, b: 180 }
+              }
+            }).jpeg().toBuffer();
+            console.log('✅ Default image created:', imageBuffer.length, 'bytes');
+          }
         }
       }
     }
