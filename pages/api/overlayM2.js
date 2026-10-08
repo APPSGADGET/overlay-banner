@@ -2100,10 +2100,15 @@ const tagalogQuotes = [
     // Extract the image parameter and reconstruct it with its query parameters
     const imageStartMatch = originalUrl.match(/[?&]image=([^&]*)/);
     if (imageStartMatch) {
-      let reconstructedImageUrl = decodeURIComponent(imageStartMatch[1]);
+      const rawImageUrl = decodeURIComponent(imageStartMatch[1]);
+      const jpgEndIndex = rawImageUrl.toLowerCase().indexOf('.jpg');
+      const ignoreImageQuery = jpgEndIndex !== -1;
+      let reconstructedImageUrl = ignoreImageQuery
+        ? rawImageUrl.slice(0, jpgEndIndex + 4)
+        : rawImageUrl;
       
       // If the image URL contains '?', it likely has query parameters that were split
-      if (reconstructedImageUrl.includes('?')) {
+      if (rawImageUrl.includes('?')) {
         console.log('🔍 Detected image URL with query parameters, reconstructing...');
         
         // Find where the image URL ends by looking for our API parameters
@@ -2132,7 +2137,7 @@ const tagalogQuotes = [
               case 'imageData': imageData = decodeURIComponent(paramValue); break;
               case 'val': val = paramValue; break;
             }
-          } else if ((!foundApiParam || part.startsWith('v=')) && part.includes('=')) {
+          } else if (!ignoreImageQuery && (!foundApiParam || part.startsWith('v=')) && part.includes('=')) {
             // Preserve the CDN version parameter even if overlay options come first.
             imageQueryParams.push(part);
           }
