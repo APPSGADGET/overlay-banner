@@ -129,6 +129,7 @@ export default async function handler(req, res) {
       console.log('🔲 Blank design requested - returning raw image without overlay');
       
       const finalImage = await processedImage
+        .flop()
         .jpeg({ quality: 90 })
         .toBuffer();
         
@@ -317,6 +318,7 @@ export default async function handler(req, res) {
         top: targetHeight - svgHeight,
         blend: 'over'
       }])
+      .flop()
       .jpeg({ quality: 90 })
       .toBuffer();
       

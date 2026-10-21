@@ -3500,6 +3500,7 @@ const tagalogQuotes = [
       console.log('🎨 Creating transparent PNG for transparent design...');
       // Create just the SVG as transparent PNG (no background image)
       finalImage = await sharp(svgBuffer)
+        .flop()
         .png()
         .toBuffer();
       console.log('✅ Transparent PNG generated:', finalImage.length, 'bytes');
@@ -3534,6 +3535,7 @@ const tagalogQuotes = [
       
       finalImage = await processedImage
         .composite(compositeLayers)
+        .flop()
         .jpeg({ quality: 90 })
         .toBuffer();
         
