@@ -2659,7 +2659,7 @@ const tagalogQuotes = [
     'DISNEY', 'PIXAR', 'MARVEL', 'STAR WARS',
 
     'WAYMOSE', 'LYFT', 'UBER',
-    'NFLX', 'DISNEY+', 'HBO MAX', 'SPOTIFY','PERMIRA','SILVER LAKE',
+    'NFLX', 'DISNEY+', 'HBO MAX', 'SPOTIFY','PERMIRA','SILVER LAKE', 'GLOBE','CYBERCRIME','APP',
 
    'WOW'
 ];
